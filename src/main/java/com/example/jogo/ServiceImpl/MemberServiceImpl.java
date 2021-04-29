@@ -2,6 +2,7 @@ package com.example.jogo.ServiceImpl;
 
 import com.example.jogo.Entity.Member;
 import com.example.jogo.Service.MemberService;
+import com.example.jogo.Utils.TokenUtil;
 import com.example.jogo.repository.MemberRepository;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -14,20 +15,29 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Chenhan Huang
+ * @since 2021.4.25
+ */
 @Service
 public class MemberServiceImpl implements MemberService {
     @Bean(name = "memberCollection")
     public MongoCollection<Document> mongoCollection(MongoTemplate mongoTemplate){
         return mongoTemplate.getCollection("Member");
     }
+
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
     @Resource
     private MemberRepository memberRepository;
-    private static final String ALL_MEMBERS="member_list";
     @Resource(name = "memberCollection")
     private MongoCollection<Document> mongoCollection;
+
+    /** PREFIX will be add to the head of the username which serves as a key of token in Redis.
+     * It will help to distinguish itself({@code PREFIX}+username) from other keys(username) without {@code PREFIX} */
+    public static final String PREFIX="uuid_";
 
     @Override
     public Member findByUsername(String username){
@@ -81,30 +91,27 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.joinProject(mongoCollection,username,project_id);
     }
 
-
     @Override
-    /**
-     * @return true if members are loaded successfully
-     */
-    public boolean loadCache(){
+    public boolean cacheMember(){
         Map<String,Member> membersMap = new HashMap<>();
         List<Member> members = findAll();
         members.forEach((member)->{
             membersMap.put(member.getUsername(),member);
         });
-        redisTemplate.opsForHash().putAll(ALL_MEMBERS,membersMap);
-        return true;
+
+        Boolean result = redisTemplate.opsForValue().multiSetIfAbsent(membersMap);
+        return result != null && result;
     }
 
+    @Override
+    public boolean cacheToken(String username,String token){
+        username = PREFIX+username;
+        Object o = redisTemplate.opsForValue().get(username);
+        if(o!=null) redisTemplate.delete(username);
 
-    //    @Override
-//    public boolean storeToken(String username,String token){
-//        Object o = redisTemplate.opsForValue().get(username);
-//        if(null==o) System.out.println("null");
-//        else redisTemplate.delete(username);
-//        redisTemplate.opsForValue().set(username,token);
-//        redisTemplate.expire(username, TokenUtil.getLiveTime(), TimeUnit.MILLISECONDS);
-//        return true;
-//    }
+        redisTemplate.opsForValue().append(username,token);
+        redisTemplate.expire(username, TokenUtil.getLiveTime(), TimeUnit.MILLISECONDS);
+        return true;
+    }
 
 }

@@ -1,6 +1,9 @@
 package com.example.jogo.Listener;
 
+import com.example.jogo.Entity.Member;
+import com.example.jogo.Service.MemberService;
 import com.example.jogo.Service.UserService;
+import com.example.jogo.ServiceImpl.MemberServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -13,9 +16,8 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class MyListener implements ServletContextListener {
 
-    private UserService userService;
+    private MemberService memberService;
     private Logger logger = LogManager.getLogger(this.getClass());
-    private static final String ALL_USERS = "user_list";
 
     // 初始化
     @Override
@@ -23,8 +25,8 @@ public class MyListener implements ServletContextListener {
         logger.info("servletContext 初始化...");
 
         ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContextEvent.getServletContext());
-        userService=applicationContext.getBean(UserService.class);
-        userService.loadCache();
+        memberService=applicationContext.getBean(MemberServiceImpl.class);
+       if(!memberService.loadCache()) logger.warn("导入用户信息失败");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.jogo;
 
+import com.alibaba.fastjson.JSON;
+import com.example.jogo.Entity.Member;
 import com.example.jogo.Service.MemberService;
 import com.example.jogo.Service.TeamService;
 import com.example.jogo.Utils.TokenUtil;
@@ -11,6 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @SpringBootTest
 class JogoApplicationTests {
@@ -34,6 +39,6 @@ class JogoApplicationTests {
 
     @Test
     void t() throws UnsupportedEncodingException {
-        System.out.println(memberService.check("dsf24f34f","f314f34f").getMsg());
+
     }
 }

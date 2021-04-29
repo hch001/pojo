@@ -49,28 +49,53 @@ public interface MemberService {
     boolean setSelfInfo(String username,String field,String value);
 
     /**
-     * 
-     * @param username
-     * @return
+     * remove a team_id in {@link Member} object
+     * @param username which member
+     * @return true if removed successfully or false if no such team_id in the member
      */
     boolean leaveTeam(String username);
+
+    /**
+     * add a team_id into {@link Member} object
+     * @param username which member
+     * @param team_id _id of which team the member will be in
+     * @return true if added successfully
+     */
     boolean joinTeam(String username,String team_id);
+
+    /**
+     * remove a project_id in {@link Member} object
+     * @param username which member
+     * @param project_id _id of which project the member will be in
+     * @return true if successfully or false if no such project_id in member object
+     */
     boolean leaveProject(String username,String project_id);
     boolean joinProject(String username,String project_id);
 
-    boolean loadCache();
-    //    boolean storeToken(String username,String token);
+    /**
+     * cache all the {@link Member} objects into Redis and it should be called when webListener starts
+     * @return true if loaded successfully
+     */
+    boolean cacheMember();
 
     /**
-     * check the format of username and password
-     * @param username username for check
-     * @param password password for check
-     * @return CheckResult
+     * cache token into Redis
+     * @param username which member
+     * @param token token for the member
+     * @return true if successfully
      */
-    default CheckResultType check(String username,String password){
-        if(username==null||password==null) return CheckResultType.NotNull;
+    boolean cacheToken(String username,String token);
+
+    /**
+     * inspect the format of username and password and Front-end should use the same inspection.
+     * @param username username for inspection
+     * @param password password for inspection
+     * @return InspectionType
+     */
+    default InspectResult inspect(String username,String password){
+        if(username==null||password==null) return InspectResult.NotNull;
         else if(username.length()<8 || username.length()>20 || password.length()<8 || password.length()>20)
-            return CheckResultType.TooShort;
+            return InspectResult.TooShort;
         boolean capital = false;
         Set<Character> allowedSet = new HashSet<>();
         for(char i=48;i<=57;i++) allowedSet.add(i);
@@ -81,22 +106,22 @@ public interface MemberService {
         for(int i=0;i<password.length();i++) {
             char c = username.charAt(i);
             if (!allowedSet.contains(c))
-                return CheckResultType.InvalidChar;
+                return InspectResult.InvalidChar;
             if (c>=65&&c<=90) capital=true;
         }
         for(int i=0;i<username.length();i++)
-            if(!allowedSet.contains(username.charAt(i))) return CheckResultType.InvalidChar;
+            if(!allowedSet.contains(username.charAt(i))) return InspectResult.InvalidChar;
 
-        if(!capital) return CheckResultType.CapitalNeeded;
+        if(!capital) return InspectResult.CapitalNeeded;
 
-        return CheckResultType.Success;
+        return InspectResult.Success;
     }
 
     /**
-     * The return type of {@link MemberService#check(String username, String password)}
+     * The return type of {@link MemberService#inspect(String username, String password)}
      * @author Chenhan Huang
      */
-    enum CheckResultType{
+    enum InspectResult{
         NotNull("输入不允许为空"),
         TooShort("用户名和密码均需要在8到20个字符之间"),
         InvalidChar("存在非法字符"),
@@ -104,7 +129,7 @@ public interface MemberService {
         Success("注册成功");
 
         private final String msg;
-        CheckResultType(String msg){
+        InspectResult(String msg){
             this.msg=msg;
         }
         public String getMsg(){
