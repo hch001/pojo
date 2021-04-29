@@ -1,7 +1,7 @@
 package com.example.jogo.Interceptor;
 
 
-import com.example.jogo.Token.TokenUtil;
+import com.example.jogo.Utils.TokenUtil;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

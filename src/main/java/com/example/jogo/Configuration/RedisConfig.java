@@ -9,7 +9,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     /**
-     * change the Serializer for java objects when using redis, otherwise, there will be some strange hexadecimal characters
+     * change the Serializer of java objects when using redis, otherwise, there will be some strange hexadecimal characters
      * @param redisConnectionFactory factory to create redisTemplate
      * @return redisTemplate
      */
