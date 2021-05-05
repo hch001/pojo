@@ -13,10 +13,13 @@ public class Assessment implements Serializable {
     private String _id;
     private String member_id;
     private Double score;
+    /** last-modification time */
     @Inoperable
     private Date time;
     private String description;
     private String evaluator;
+
+    public Assessment(){ this.time = new Date();}
 
     public String get_id() {
         return _id;

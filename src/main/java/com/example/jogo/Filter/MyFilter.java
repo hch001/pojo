@@ -36,5 +36,6 @@ public class MyFilter implements Filter {
     @Override
     public void destroy(){
         logger.info("filter >>> 销毁");
+
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Document(value = "Member")
@@ -17,6 +18,11 @@ public class Member implements Serializable {
     private String email;
     private String team_id;
     private List<String> project_ids;
+    private Date time;
+
+    public Member(){
+        this.time = new Date();
+    }
 
     public String getUsername() {
         return username;
@@ -56,6 +62,14 @@ public class Member implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public String get_id() {

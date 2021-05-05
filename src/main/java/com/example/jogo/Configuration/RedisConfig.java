@@ -11,14 +11,15 @@ public class RedisConfig {
     /**
      * change the Serializer of java objects when using redis, otherwise, there will be some strange hexadecimal characters
      * @param redisConnectionFactory factory to create redisTemplate
-     * @return redisTemplate
+     * @return redisTemplate<String,Object>
      */
     @Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new JSONSerializer("UTF8"));
+//        redisTemplate.setValueSerializer(new JSONSerializer("UTF8"));
+        redisTemplate.setValueSerializer(new MySerializer());
         return redisTemplate;
     }
 }

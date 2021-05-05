@@ -37,7 +37,7 @@ public interface MemberService {
      * @param password password for verification
      * @return true if username and password match
      */
-    boolean verify(String username,String password);
+    boolean match(String username,String password);
 
     /**
      * set value of field in {@link Member} object
@@ -70,21 +70,29 @@ public interface MemberService {
      * @return true if successfully or false if no such project_id in member object
      */
     boolean leaveProject(String username,String project_id);
+
     boolean joinProject(String username,String project_id);
 
     /**
      * cache all the {@link Member} objects into Redis and it should be called when webListener starts
      * @return true if loaded successfully
      */
-    boolean cacheMember();
+    boolean cacheMembers();
 
     /**
      * cache token into Redis
      * @param username which member
      * @param token token for the member
-     * @return true if successfully
+     * @return true if new token of the member replaced the old one
      */
     boolean cacheToken(String username,String token);
+
+    boolean removeToken(String token);
+
+    /**
+     * flush redis
+     */
+    void flushDB();
 
     /**
      * inspect the format of username and password and Front-end should use the same inspection.
@@ -92,30 +100,7 @@ public interface MemberService {
      * @param password password for inspection
      * @return InspectionType
      */
-    default InspectResult inspect(String username,String password){
-        if(username==null||password==null) return InspectResult.NotNull;
-        else if(username.length()<8 || username.length()>20 || password.length()<8 || password.length()>20)
-            return InspectResult.TooShort;
-        boolean capital = false;
-        Set<Character> allowedSet = new HashSet<>();
-        for(char i=48;i<=57;i++) allowedSet.add(i);
-        for(char i=65;i<=90;i++) allowedSet.add(i);
-        for(char i=97;i<=122;i++) allowedSet.add(i);
-        allowedSet.add('_');
-
-        for(int i=0;i<password.length();i++) {
-            char c = username.charAt(i);
-            if (!allowedSet.contains(c))
-                return InspectResult.InvalidChar;
-            if (c>=65&&c<=90) capital=true;
-        }
-        for(int i=0;i<username.length();i++)
-            if(!allowedSet.contains(username.charAt(i))) return InspectResult.InvalidChar;
-
-        if(!capital) return InspectResult.CapitalNeeded;
-
-        return InspectResult.Success;
-    }
+    InspectResult inspect(String username,String password);
 
     /**
      * The return type of {@link MemberService#inspect(String username, String password)}
@@ -126,7 +111,8 @@ public interface MemberService {
         TooShort("用户名和密码均需要在8到20个字符之间"),
         InvalidChar("存在非法字符"),
         CapitalNeeded("密码需要至少一个大写字母"),
-        Success("注册成功");
+        Success("注册成功"),
+        AlreadyExisted("用户名已存在");
 
         private final String msg;
         InspectResult(String msg){

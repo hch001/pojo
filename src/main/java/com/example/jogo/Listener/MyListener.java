@@ -26,11 +26,12 @@ public class MyListener implements ServletContextListener {
 
         ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContextEvent.getServletContext());
         memberService=applicationContext.getBean(MemberServiceImpl.class);
-       if(!memberService.loadCache()) logger.warn("导入用户信息失败");
+        memberService.cacheMembers();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent){
+        memberService.flushDB();
         logger.info("servletContext 销毁");
     }
 }

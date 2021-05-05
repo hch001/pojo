@@ -1,7 +1,10 @@
 package com.example.jogo.Interceptor;
 
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.jogo.Utils.TokenUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,32 +13,39 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Resource
     private TokenUtil tokenUtil;
+    private static final Logger logger = LogManager.getLogger(TokenInterceptor.class);
 
     // controller之前
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
         System.out.println("----- preHandle -----");
-        return true;
-//        if(null==token) {
-//            System.out.println("抓住一个不带token的");
-//            response.setStatus(403);
-//
-//            return false;
-//        }
-//        else {
-//            if(tokenUtil.verify(token)){
-//                System.out.println("认证过的token");
-//                return true;
-//            }
-//            return false;
-//        }
+        if(null==token) {
+            logger.info("收到不带token的非法请求");
+            response.setStatus(401);
+        }
+        else {
+            try{
+                if(tokenUtil.verify(token)){
+                    return true;
+                }
+            }
+            catch (UnsupportedEncodingException | JWTVerificationException e){
+                logger.info("token解析错误或者已经过期");
+                response.setStatus(401);
+            }
+            finally {
+//                System.out.println("token为"+token);
+            }
+        }
+        return false;
     }
 
     // controller之后

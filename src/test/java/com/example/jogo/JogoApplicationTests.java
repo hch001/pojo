@@ -12,10 +12,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 @SpringBootTest
 class JogoApplicationTests {
@@ -38,7 +34,9 @@ class JogoApplicationTests {
     private TeamService teamService;
 
     @Test
-    void t() throws UnsupportedEncodingException {
-
+    void t() {
+        Object o = redisTemplate.opsForValue().get("JD8J38E238E");
+        assert o != null;
+        System.out.println(((Member)o).getTime());
     }
 }
