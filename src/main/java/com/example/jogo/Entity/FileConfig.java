@@ -11,8 +11,11 @@ import java.util.List;
 public class FileConfig implements Serializable {
     @MongoId
     private String _id;
+    private String teamId;
+    private String projectId;
+
     private Integer maxSizePerFile;
-    private List<String> allowedType;
+    private List<String> allowedTypes;
     @Inoperable
     private Integer used;
 
@@ -32,12 +35,12 @@ public class FileConfig implements Serializable {
         this.maxSizePerFile = maxSizePerFile;
     }
 
-    public List<String> getAllowedType() {
-        return allowedType;
+    public List<String> getAllowedTypes() {
+        return allowedTypes;
     }
 
-    public void setAllowedType(List<String> allowedType) {
-        this.allowedType = allowedType;
+    public void setAllowedTypes(List<String> allowedTypes) {
+        this.allowedTypes = allowedTypes;
     }
 
     public Integer getUsed() {

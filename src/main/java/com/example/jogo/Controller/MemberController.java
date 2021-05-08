@@ -31,13 +31,22 @@ public class MemberController {
     public Map<String,String> login(@RequestBody Member member){
         Map<String,String> res = new HashMap<>();
         try{
-            if(memberService.match(member.getUsername(),member.getPassword())){
+            String username = member.getUsername();
+            String password = member.getPassword();
+            if(memberService.match(username,password)){
                 res.put("code","200");
                 String token = tokenUtil.sign(member);
                 res.put("token",token);
-                memberService.cacheToken(member.getUsername(), token);
+                if(memberService.cacheToken(member.getUsername(), token)) {
+                    res.put("msg", "登录成功,已退出另一方登录");
+                    res.replace("code","201");
+                }
+                else res.put("msg","登录成功");
             }
-            else res.put("code","406");
+            else {
+                res.put("code","406");
+                res.put("msg","用户名账号不匹配");
+            }
         }catch (UnsupportedEncodingException e){
             logger.warn("UnsupportedEncodingException");
         }
@@ -49,7 +58,7 @@ public class MemberController {
     @ResponseBody
     public Map<String,String> register(@RequestBody Member member){
         Map<String,String> res = new HashMap<>();
-        String msg = memberService.inspect(member.getUsername(),member.getPassword()).getMsg();
+        String msg = memberService.inspectAndAddNewMember(member.getUsername(),member.getPassword()).getMsg();
         if(msg.equals("注册成功"))
             res.put("code","200");
         else res.put("code","406");

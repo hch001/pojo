@@ -28,11 +28,14 @@ public class MySerializer implements RedisSerializer<Object> {
     @Override
     public Object deserialize(byte[] bytes) throws SerializationException {
         try{
+            /* bytes will be null when key not found in redis */
+            if(bytes==null) return null;
             ByteArrayInputStream bias = new ByteArrayInputStream(bytes);
             ObjectInputStream ois = new ObjectInputStream(bias);
             return ois.readObject();
-        }catch (IOException e){
-            logger.error("反序列化时输入的字节流出错");
+        }
+        catch (IOException e){
+            logger.error("反序列化时输入的字节流头部出错");
         }catch (ClassNotFoundException e){
             logger.error("找不到反序列化时对象对应的类");
         }

@@ -14,19 +14,29 @@ import java.util.Set;
  * @since 2021.4.27
  */
 public interface MemberService {
+    /**
+     * search Member in Redis. If not existed, search it in MongoDB.
+     * @param username
+     * @return
+     */
     Member findByUsername(String username);
+
+    /**
+     * get all members from MongoDB.
+     * @return
+     */
     List<Member> findAll();
 
     /**
-     * save a member into MongoDB
+     * save a member into MongoDB and Redis
      * @param member member who will be saved
      * @return true if its username doesn't exist and it pass the check
      */
     boolean save(Member member);
 
     /**
-     * username already existed or not
-     * @param username username for check
+     * username exists in Redis or MongoDB or not.
+     * @param username
      * @return true if username exists
      */
     boolean isExist(String username);
@@ -35,12 +45,12 @@ public interface MemberService {
      * if username and password match
      * @param username username for verification
      * @param password password for verification
-     * @return true if username and password match
+     * @return
      */
     boolean match(String username,String password);
 
     /**
-     * set value of field in {@link Member} object
+     * set value of field in {@link Member} object and cache in Redis will be also modified
      * @param username username of the member object
      * @param field which field you want to set value
      * @param value value you want to set
@@ -49,61 +59,72 @@ public interface MemberService {
     boolean setSelfInfo(String username,String field,String value);
 
     /**
-     * remove a team_id in {@link Member} object
+     * remove a teamId in {@link Member} object and cache in Redis will be also modified
      * @param username which member
-     * @return true if removed successfully or false if no such team_id in the member
+     * @return true if removed successfully or false if no such teamId in the member
      */
     boolean leaveTeam(String username);
 
     /**
-     * add a team_id into {@link Member} object
+     * add a teamId into {@link Member} object and cache in Redis will be also modified
      * @param username which member
-     * @param team_id _id of which team the member will be in
+     * @param teamId _id of which team the member will be in
      * @return true if added successfully
      */
-    boolean joinTeam(String username,String team_id);
+    boolean joinTeam(String username,String teamId);
 
     /**
-     * remove a project_id in {@link Member} object
+     * remove a projectId in {@link Member} object and cache in Redis will be also modified
      * @param username which member
-     * @param project_id _id of which project the member will be in
-     * @return true if successfully or false if no such project_id in member object
+     * @param projectId _id of which project the member will be in
+     * @return true if successfully or false if no such projectId in member object
      */
-    boolean leaveProject(String username,String project_id);
-
-    boolean joinProject(String username,String project_id);
+    boolean leaveProject(String username,String projectId);
 
     /**
-     * cache all the {@link Member} objects into Redis and it should be called when webListener starts
+     * add a projectId into {@link Member} object and cache in Redis will be also modified
+     * @param username
+     * @param projectId
+     * @return
+     */
+    boolean joinProject(String username,String projectId);
+
+    /**
+     * store all the {@link Member} objects into Redis and it should be called when webListener{@link com.example.jogo.Listener.MyListener} starts
      * @return true if loaded successfully
      */
     boolean cacheMembers();
 
     /**
-     * cache token into Redis
+     * store token into Redis
      * @param username which member
      * @param token token for the member
-     * @return true if new token of the member replaced the old one
+     * @return true if old token replaced
      */
     boolean cacheToken(String username,String token);
 
+    /**
+     * remove token from Redis
+     * @param token
+     * @return
+     */
     boolean removeToken(String token);
 
     /**
-     * flush redis
+     * flush
      */
     void flushDB();
 
     /**
-     * inspect the format of username and password and Front-end should use the same inspection.
+     * inspect the format of username and password and add new Member into Redis and MongoDB.
      * @param username username for inspection
      * @param password password for inspection
      * @return InspectionType
      */
-    InspectResult inspect(String username,String password);
+    InspectResult inspectAndAddNewMember(String username,String password);
 
     /**
-     * The return type of {@link MemberService#inspect(String username, String password)}
+     * The return type of {@link MemberService#inspectAndAddNewMember(String username, String password)}
      * @author Chenhan Huang
      */
     enum InspectResult{

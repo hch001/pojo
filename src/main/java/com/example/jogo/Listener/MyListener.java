@@ -1,8 +1,6 @@
 package com.example.jogo.Listener;
 
-import com.example.jogo.Entity.Member;
 import com.example.jogo.Service.MemberService;
-import com.example.jogo.Service.UserService;
 import com.example.jogo.ServiceImpl.MemberServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

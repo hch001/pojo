@@ -24,11 +24,11 @@ public class WebMVCConfig implements WebMvcConfigurer {
     }
 
     // 添加拦截器
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/member/login","/member/register");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(tokenInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/member/login","/member/register");
+//    }
 
 }

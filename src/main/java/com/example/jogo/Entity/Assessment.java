@@ -11,7 +11,9 @@ import java.util.Date;
 public class Assessment implements Serializable {
     @MongoId
     private String _id;
-    private String member_id;
+    private String teamId;
+    private String projectId;
+    private String username;
     private Double score;
     /** last-modification time */
     @Inoperable
@@ -21,6 +23,22 @@ public class Assessment implements Serializable {
 
     public Assessment(){ this.time = new Date();}
 
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String get_id() {
         return _id;
     }
@@ -29,12 +47,12 @@ public class Assessment implements Serializable {
         this._id = _id;
     }
 
-    public String getMember_id() {
-        return member_id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMember_id(String member_id) {
-        this.member_id = member_id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Double getScore() {

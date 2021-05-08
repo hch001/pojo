@@ -1,6 +1,6 @@
 package com.example.jogo.Entity;
 
-import com.example.jogo.MyAnnotation.FieldName;
+
 import com.example.jogo.MyAnnotation.Inoperable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -12,6 +12,10 @@ import java.util.Date;
 public class FileInfo implements Serializable {
     @MongoId
     private String _id;
+    @Inoperable
+    private String teamId;
+    @Inoperable
+    private String projectId;
     @Inoperable
     private String fileName;
     @Inoperable
@@ -25,7 +29,11 @@ public class FileInfo implements Serializable {
     @Inoperable
     private Integer size;
     @Inoperable
-    private Date time;
+    private final Date time;
+
+    FileInfo(){
+        time = new Date();
+    }
 
     public String get_id() {
         return _id;
@@ -34,6 +42,23 @@ public class FileInfo implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String getFileName() {
         return fileName;
     }
@@ -84,9 +109,5 @@ public class FileInfo implements Serializable {
 
     public Date getTime() {
         return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 }

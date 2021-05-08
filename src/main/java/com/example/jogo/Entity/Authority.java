@@ -11,21 +11,53 @@ public class Authority implements Serializable {
     @MongoId
     private String _id;
     @Inoperable
-    private String team_id;
+    private String teamId;
     @Inoperable
-    private String project_id;
+    private String projectId;
     @Inoperable
-    private String member_id;
+    private String username;
+
     private Boolean upload;
     private Boolean download;
     private Boolean removeFile;
+
     private Boolean addMember;
     private Boolean removeMember;
+
     private Boolean modifyTeamInfo;
     private Boolean modifyProjectInfo;
+
     private Boolean modifyTask;
+
     private Boolean modifyNotice;
-    private Boolean assessMember;
+
+    private Boolean assess;
+
+    public boolean getAuthority(String field){
+        switch (field){
+            case ("upload"):
+                return notNullAndTrue(getUpload());
+            case ("download"):
+                return notNullAndTrue(getDownload());
+            case ("addMember"):
+                return notNullAndTrue(getAddMember());
+            case ("removeMember"):
+                return notNullAndTrue(getRemoveMember());
+            case ("modifyTeamInfo"):
+                return notNullAndTrue(getModifyTeamInfo());
+            case ("modifyProjectInfo"):
+                return notNullAndTrue(getModifyProjectInfo());
+            case ("modifyTask"):
+                return notNullAndTrue(getModifyTask());
+            case ("modifyNotice"):
+                return notNullAndTrue(getModifyNotice());
+            case ("assess"):
+                return notNullAndTrue(notNullAndTrue(getAssess()));
+        }
+        return false;
+    }
+
+    private boolean notNullAndTrue(Boolean b) {return b!=null&&b;}
 
     public String get_id() {
         return _id;
@@ -34,28 +66,28 @@ public class Authority implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
-    public String getTeam_id() {
-        return team_id;
+    public String getTeamId() {
+        return teamId;
     }
 
-    public void setTeam_id(String team_id) {
-        this.team_id = team_id;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 
-    public String getProject_id() {
-        return project_id;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
-    public String getMember_id() {
-        return member_id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMember_id(String member_id) {
-        this.member_id = member_id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Boolean getUpload() {
@@ -130,11 +162,13 @@ public class Authority implements Serializable {
         this.modifyNotice = modifyNotice;
     }
 
-    public Boolean getAssessMember() {
-        return assessMember;
+    public Boolean getAssess() {
+        return assess;
     }
 
-    public void setAssessMember(Boolean assessMember) {
-        this.assessMember = assessMember;
+    public void setAssess(Boolean assess) {
+        this.assess = assess;
     }
+
+
 }

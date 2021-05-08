@@ -1,10 +1,13 @@
 package com.example.jogo;
 
 import com.alibaba.fastjson.JSON;
+import com.example.jogo.Entity.Authority;
 import com.example.jogo.Entity.Member;
+import com.example.jogo.Service.FileInfoService;
 import com.example.jogo.Service.MemberService;
 import com.example.jogo.Service.TeamService;
 import com.example.jogo.Utils.TokenUtil;
+import com.example.jogo.repository.AuthorityRepository;
 import com.example.jogo.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,22 +24,11 @@ class JogoApplicationTests {
     }
 
     @Resource
-    private MemberService memberService;
+    private AuthorityRepository authorityRepository;
     @Resource
-    private TokenUtil tokenUtil;
-    @Resource
-    private RedisTemplate<Object,Object> redisTemplate;
-    @Resource
-    private MongoTemplate mongoTemplate;
-    @Resource
-    private TeamRepository teamRepository;
-    @Resource
-    private TeamService teamService;
+    private FileInfoService fileInfoService;
 
     @Test
     void t() {
-        Object o = redisTemplate.opsForValue().get("JD8J38E238E");
-        assert o != null;
-        System.out.println(((Member)o).getTime());
     }
 }

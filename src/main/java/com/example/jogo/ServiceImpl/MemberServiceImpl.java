@@ -1,8 +1,9 @@
 package com.example.jogo.ServiceImpl;
 
-import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.jogo.Entity.Authority;
 import com.example.jogo.Entity.Member;
+import com.example.jogo.Service.AuthorityService;
 import com.example.jogo.Service.MemberService;
 import com.example.jogo.Utils.TokenUtil;
 import com.example.jogo.repository.MemberRepository;
@@ -12,8 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.redis.connection.RedisClusterNode;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +38,8 @@ public class MemberServiceImpl implements MemberService {
     private TokenUtil tokenUtil;
     @Resource
     private MemberRepository memberRepository;
+    @Resource
+    private AuthorityService authorityService;
     @Resource(name = "memberCollection")
     private MongoCollection<Document> mongoCollection;
     private static final Logger logger = LogManager.getLogger(MemberServiceImpl.class);
@@ -49,7 +50,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findByUsername(String username){
-        return memberRepository.findByUsername(username);
+        /* search in cache first */
+        Member res = findByUsernameInCache(username);
+
+        return res==null?memberRepository.findByUsername(username):res;
+    }
+
+    private Member findByUsernameInCache(String username){
+        Object o = redisTemplate.opsForValue().get(username);
+
+        return o==null?null:(Member)o;
     }
 
     @Override
@@ -59,44 +69,75 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isExist(String username){
-        return null!=memberRepository.findByUsername(username);
+        return null!=findByUsername(username);
     }
 
     @Override
     public boolean save(Member member){
         if(isExist(member.getUsername())) return false;
         memberRepository.save(member);
+        redisTemplate.opsForValue().set(member.getUsername(),member); /* added into in redis */
+
         return true;
     }
 
     @Override
     public boolean match(String username, String password) {
-        return memberRepository.findByUsernameAndPassword(username,password)!=null;
+        Member member = findByUsername(username);
+        return member != null && member.getPassword().equals(password);
     }
 
     @Override
     public boolean setSelfInfo(String username,String field,String value){
-        return memberRepository.setSelfInfo(mongoCollection,username,field,value);
+        boolean res = memberRepository.setSelfInfo(mongoCollection,username,field,value);
+        if(res){
+            /* modify data in redis */
+            modifyDataInRedisAfterMongo(username);
+        }
+
+        return res;
     }
 
     @Override
     public boolean leaveTeam(String username){
-        return memberRepository.leaveTeam(mongoCollection,username);
+        boolean res = memberRepository.leaveTeam(mongoCollection,username);
+        if(res){
+            /* modify data in redis */
+            modifyDataInRedisAfterMongo(username);
+        }
+        return res;
     }
 
     @Override
-    public boolean joinTeam(String username,String team_id){
-        return memberRepository.joinTeam(mongoCollection,username,team_id);
+    public boolean joinTeam(String username,String teamId){
+        boolean res = memberRepository.joinTeam(mongoCollection,username,teamId);
+        if(res){
+            /* modify data in redis */
+            modifyDataInRedisAfterMongo(username);
+        }
+
+        return res;
     }
 
     @Override
-    public boolean leaveProject(String username,String project_id){
-        return memberRepository.leaveProject(mongoCollection,username,project_id);
+    public boolean leaveProject(String username,String projectId){
+        boolean res = memberRepository.leaveProject(mongoCollection,username,projectId);
+        if(res){
+            /* modify data in redis */
+            modifyDataInRedisAfterMongo(username);
+        }
+        return res;
     }
 
     @Override
-    public boolean joinProject(String username,String project_id){
-        return memberRepository.joinProject(mongoCollection,username,project_id);
+    public boolean joinProject(String username,String projectId){
+        boolean res = memberRepository.joinProject(mongoCollection,username,projectId);
+        if(res){
+            /* modify data in redis */
+            modifyDataInRedisAfterMongo(username);
+        }
+
+        return res;
     }
 
     @Override
@@ -124,7 +165,10 @@ public class MemberServiceImpl implements MemberService {
             replaced=true;
         }
 
-        redisTemplate.opsForValue().append(username,token);
+        /* To use the specific serializer and deserializer, call set(String,Object) rather than append(String,String).
+        * Otherwise, may cause IOException in MySerializer.deserializer().
+        * */
+        redisTemplate.opsForValue().set(username,token);
         redisTemplate.expire(username, TokenUtil.getLiveTime(), TimeUnit.MILLISECONDS);
 
         if(!replaced) logger.info("添加用户"+username+"的新token");
@@ -158,7 +202,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-     public InspectResult inspect(String username,String password){
+     public InspectResult inspectAndAddNewMember(String username,String password){
         if(username==null||password==null) return InspectResult.NotNull;
         else if(username.length()<8 || username.length()>20 || password.length()<8 || password.length()>20)
             return InspectResult.TooShort;
@@ -183,10 +227,14 @@ public class MemberServiceImpl implements MemberService {
         Member member = new Member();
         member.setUsername(username);
         member.setPassword(password);
+
         if(!save(member)) return InspectResult.AlreadyExisted;
-        redisTemplate.opsForValue().set(username,member);
 
         return InspectResult.Success;
     }
 
+    private void modifyDataInRedisAfterMongo(String username){
+        Member member = memberRepository.findByUsername(username);
+        redisTemplate.opsForValue().set(username,member);
+    }
 }

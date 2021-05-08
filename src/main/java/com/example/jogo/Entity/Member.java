@@ -16,8 +16,8 @@ public class Member implements Serializable {
     private String nickName;
     private String phone;
     private String email;
-    private String team_id;
-    private List<String> project_ids;
+    private String teamId;
+    private List<String> projectIds;
     private Date time;
 
     public Member(){
@@ -80,19 +80,19 @@ public class Member implements Serializable {
         this._id = _id;
     }
 
-    public String getTeam_id() {
-        return team_id;
+    public String getTeamId() {
+        return teamId;
     }
 
-    public void setTeam_id(String team_id) {
-        this.team_id = team_id;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 
-    public List<String> getProject_ids() {
-        return project_ids;
+    public List<String> getProjectIds() {
+        return projectIds;
     }
 
-    public void setProject_ids(List<String> project_ids) {
-        this.project_ids = project_ids;
+    public void setProjectIds(List<String> projectIds) {
+        this.projectIds = projectIds;
     }
 }
