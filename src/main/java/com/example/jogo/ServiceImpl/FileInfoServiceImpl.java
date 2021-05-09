@@ -1,5 +1,6 @@
 package com.example.jogo.ServiceImpl;
 
+import com.example.jogo.Entity.FileInfo;
 import com.example.jogo.Service.FileInfoService;
 import com.example.jogo.repository.FileInfoRepository;
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +26,14 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId) {
         return fileInfoRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+    }
+
+    @Override
+    public boolean save(FileInfo fileInfo) {
+        if(fileInfoRepository.findByTeamIdAndProjectId(fileInfo.getTeamId(),fileInfo.getTeamId())!=null)
+            return false;
+        fileInfoRepository.save(fileInfo);
+        return true;
     }
 
     @Override

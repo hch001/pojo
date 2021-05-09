@@ -31,7 +31,7 @@ public class FileInfo implements Serializable {
     @Inoperable
     private final Date time;
 
-    FileInfo(){
+    public FileInfo(){
         time = new Date();
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface FileConfigRepository extends MongoRepository<FileConfig,String> {
     FileConfig findByTeamIdAndProjectId(String teamId,String projectId);
-    void deleteAllByTeamIdAndProjectId(String teamId, String projectId);
+    boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId);
 
     default boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize){
         FileConfig fileConfig = findByTeamIdAndProjectId(teamId,projectId);
@@ -30,4 +30,16 @@ public interface FileConfigRepository extends MongoRepository<FileConfig,String>
 
         return true;
     }
+
+    default boolean setUsed(String teamId,String projectId,int newUsed){
+        FileConfig fileConfig = findByTeamIdAndProjectId(teamId,projectId);
+        if(null==fileConfig) return false;
+        fileConfig.setUsed(newUsed);
+        deleteAllByTeamIdAndProjectId(teamId,projectId);
+        save(fileConfig);
+
+        return true;
+    }
+
+
 }

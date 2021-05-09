@@ -1,5 +1,6 @@
 package com.example.jogo.Entity;
 
+import com.example.jogo.MyAnnotation.Inoperable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -12,6 +13,7 @@ public class Team implements Serializable {
     @MongoId
     private String _id;
     private String teamName;
+    @Inoperable
     private Date time;
     private String teamManager;
     private List<String> members;

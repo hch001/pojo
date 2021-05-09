@@ -12,11 +12,15 @@ import java.util.List;
 public class Project implements Serializable {
     @MongoId
     private String _id;
+    private String teamId;
     @Inoperable
     private Date time;
     private String projectManager;
     private String projectName;
     private List<String> members;
+    private List<FileInfo> files;
+    private FileConfig fileConfig;
+    private List<Authority> authorities;
     private List<Log> logs;
     private List<Notice> notices;
     private String description;
@@ -30,6 +34,15 @@ public class Project implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
     public Date getTime() {
         return time;
     }
@@ -100,5 +113,29 @@ public class Project implements Serializable {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<FileInfo> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<FileInfo> files) {
+        this.files = files;
+    }
+
+    public FileConfig getFileConfig() {
+        return fileConfig;
+    }
+
+    public void setFileConfig(FileConfig fileConfig) {
+        this.fileConfig = fileConfig;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

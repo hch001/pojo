@@ -1,5 +1,6 @@
 package com.example.jogo.ServiceImpl;
 
+import com.example.jogo.Entity.FileInfo;
 import com.example.jogo.Entity.Team;
 import com.example.jogo.Service.TeamService;
 import com.example.jogo.repository.TeamRepository;
@@ -41,4 +42,6 @@ public class TeamServiceImpl implements TeamService {
         List<Team> teams = teamRepository.getTeamByTeamNameWithField(teamName,field,attr,value);
         return teams.size()==0?null:teams.get(0);
     }
+
+
 }

@@ -27,6 +27,22 @@ public class FileConfig implements Serializable {
         this._id = _id;
     }
 
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public Integer getMaxSizePerFile() {
         return maxSizePerFile;
     }

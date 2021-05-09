@@ -1,5 +1,6 @@
 package com.example.jogo.Service;
 
+import com.example.jogo.Entity.FileInfo;
 import com.example.jogo.Entity.Team;
 
 /**
@@ -12,5 +13,4 @@ public interface TeamService {
     Team getTeamByTeamName(String teamName);
     Team getTeamByTeamNameWithField(String teamName,String field);
     Team getTeamByTeamNameWithField(String teamName,String field,String attr,String value);
-
 }

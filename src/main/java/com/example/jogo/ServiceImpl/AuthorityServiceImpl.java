@@ -15,12 +15,21 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public boolean hasAuthority(String teamId, String projectId, String username, String authorityField) {
         Authority authority = authorityRepository.findByTeamIdAndProjectIdAndUsername(teamId,projectId,username);
-        if(authority==null) return false;
+        if(authority==null)
+            return false;
+
         return authority.getAuthority(authorityField);
     }
 
     @Override
     public boolean removeAuthority(String teamId, String projectId, String username) {
         return authorityRepository.deleteAllByTeamIdAndProjectIdAndUsername(teamId,projectId,username);
+    }
+
+    @Override
+    public boolean replace(String teamId, String projectId, String username, Authority authority) {
+        if(!removeAuthority(teamId,projectId,username)) return false;
+        authorityRepository.save(authority);
+        return true;
     }
 }
