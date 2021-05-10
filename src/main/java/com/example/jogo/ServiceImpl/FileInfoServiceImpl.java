@@ -13,11 +13,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.List;
 
 @Service
 public class FileInfoServiceImpl implements FileInfoService {
     @Resource
     private FileInfoRepository fileInfoRepository;
+    /* Call env.getProper() to get variable defined in application.properties. */
     @Resource
     private Environment env;
     private static final int BUFF_SIZE = 1024;
@@ -29,8 +31,37 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
+    public boolean deleteByTeamIdAndProjectIdAndFileName(String teamId, String projectId, String fileName) {
+        return fileInfoRepository.deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+    }
+
+    @Override
+    public boolean deleteFile(FileInfo fileInfo) {
+        String path,rootPath=env.getProperty("rootPath");
+        if(fileInfo.getProjectId().equals(""))
+            path = rootPath+"/"+fileInfo.getTeamId()+"/"+fileInfo.getFileName();
+        else path = rootPath+"/"+fileInfo.getTeamId()+"/"+fileInfo.getProjectId()+"/"+fileInfo.getFileName();
+
+        File file = new File(path);
+        if(!file.exists())
+            return false;
+
+        return file.delete();
+    }
+
+    @Override
+    public List<FileInfo> findAllByTeamIdAndProjectId(String teamId, String projectId) {
+        return fileInfoRepository.findAllByTeamIdAndProjectId(teamId,projectId);
+    }
+
+    @Override
+    public FileInfo findByTeamIdAndProjectIdAndFileName(String teamId, String projectId, String fileName) {
+        return fileInfoRepository.findByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+    }
+
+    @Override
     public boolean save(FileInfo fileInfo) {
-        if(fileInfoRepository.findByTeamIdAndProjectId(fileInfo.getTeamId(),fileInfo.getTeamId())!=null)
+        if(fileInfoRepository.findByTeamIdAndProjectIdAndFileName(fileInfo.getTeamId(),fileInfo.getTeamId(),fileInfo.getFileName())!=null)
             return false;
         fileInfoRepository.save(fileInfo);
         return true;
@@ -47,7 +78,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 
         if(multipartFile==null) return false;
 
-        if(projectId==null||projectId.equals(""))
+        if(projectId.equals(""))
             path=rootPath+"/"+teamId+"/"+multipartFile.getOriginalFilename();
         else path = rootPath+"/"+teamId+"/"+projectId+"/"+multipartFile.getOriginalFilename();
 

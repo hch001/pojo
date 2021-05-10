@@ -44,7 +44,7 @@ public class MemberController {
                 else res.put("msg","登录成功");
             }
             else {
-                res.put("code","406");
+                res.put("code","403");
                 res.put("msg","用户名账号不匹配");
             }
         }catch (UnsupportedEncodingException e){
@@ -61,7 +61,7 @@ public class MemberController {
         String msg = memberService.inspectAndAddNewMember(member.getUsername(),member.getPassword()).getMsg();
         if(msg.equals("注册成功"))
             res.put("code","200");
-        else res.put("code","406");
+        else res.put("code","403");
         res.put("msg",msg);
         return res;
     }
@@ -74,7 +74,7 @@ public class MemberController {
         if(success) {
             res.put("code","200");
         }
-        else res.put("code","406");
+        else res.put("code","403");
         return res;
     }
 

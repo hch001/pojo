@@ -6,7 +6,7 @@
             <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
         </Console>
 
-        <RollingFile name="RollingFileInfo" fileName="/usr/local/var/pojo_log/info.log" filePattern="/usr/local/var/pojo_log/info-%d{yyyy-MM-dd HH}-%i.log">
+        <RollingFile name="RollingFileInfo" fileName="/usr/local/var/jogo_log/info.log" filePattern="/usr/local/var/jogo_log/info-%d{yyyy-MM-dd HH}-%i.log">
             <Filters>
                 <ThresholdFilter level="INFO"/>
             </Filters>

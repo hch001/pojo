@@ -1,5 +1,6 @@
 package com.example.jogo.Entity;
 
+import com.example.jogo.MyAnnotation.Unique;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public class Member implements Serializable {
     @MongoId
     private String _id;
+    @Unique
     private String username;
     private String password;
     private String nickName;

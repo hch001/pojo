@@ -11,10 +11,10 @@ import java.util.Date;
 public class Log implements Serializable {
     @MongoId
     private String _id;
+    private String teamId;
+    private String projectId;
     @Inoperable
     private String username;
-    @Inoperable
-    private String userName;
     @Inoperable
     private Date time;
     private String detail;
@@ -26,20 +26,29 @@ public class Log implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getDetail() {

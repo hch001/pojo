@@ -11,6 +11,9 @@ import java.util.Date;
 public class Notice implements Serializable {
     @MongoId
     private String _id;
+    private String teamId;
+    private String projectId;
+
     private String content;
     @Inoperable
     private Date time;
@@ -22,6 +25,23 @@ public class Notice implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String getContent() {
         return content;
     }

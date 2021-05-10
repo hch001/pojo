@@ -3,31 +3,33 @@ package com.example.jogo.ServiceImpl;
 import com.example.jogo.Entity.Task;
 import com.example.jogo.Service.TaskService;
 import com.example.jogo.repository.TaskRepository;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.jms.Destination;
+import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
     @Resource
-    private TaskRepository repository;
-    @Resource
-    private Producer producer;
-    @Resource
-    private Consumer consumer;
+    private TaskRepository taskRepository;
 
     @Override
-    public Task save(Task task){
-        repository.save(task);
-        return task;
+    public List<Task> findAllByTeamIdAndProjectId(String teamId, String projectId) {
+        return taskRepository.findAllByTeamIdAndProjectId(teamId,projectId);
     }
 
     @Override
-    public Task asynSave(Task task){
-        Destination destination = new ActiveMQQueue("my_queue");
-        producer.sendTaskMessage(destination,task);
-        return task;
+    public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId) {
+        return taskRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+    }
+
+    @Override
+    public boolean deleteBy_id(String _id) {
+        return taskRepository.deleteBy_id(_id);
+    }
+
+    @Override
+    public void save(Task task) {
+        taskRepository.save(task);
     }
 }

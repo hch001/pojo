@@ -15,7 +15,7 @@ public class Assessment implements Serializable {
     private String projectId;
     private String username;
     private Double score;
-    /** last-modification time */
+    /** last-modified time */
     @Inoperable
     private Date time;
     private String description;

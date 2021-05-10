@@ -6,15 +6,17 @@ import java.util.List;
 
 public interface FileConfigService {
     /**
-     * Add a default fileConfig setting into a new team or project. If a team, just set projectId as null.
+     * Add a default fileConfig setting into a new team or project.
+     * If a team, just set projectId as "".
      * @param teamId
      * @param projectId
-     * @return true if and only if this FileConfig object not exists and dir where store files created successfully
+     * @return true if and only if this FileConfig object not exists and directory where files will be stored created successfully
      */
     boolean init(String teamId,String projectId);
 
     /**
      * A team or project allow files of this type or not.
+     * If a team, just set projectId as "".
      * @param teamId
      * @param projectId
      * @param type
@@ -24,6 +26,7 @@ public interface FileConfigService {
 
     /**
      * The team or project has enough space to store file of {@code size} or not.
+     * If a team, just set projectId as "".
      * @param teamId
      * @param projectId
      * @param fileSize
@@ -31,8 +34,22 @@ public interface FileConfigService {
      */
     boolean hasEnoughSpace(String teamId,String projectId,int fileSize);
 
+    /**
+     * Get fileConfig of a team or project.
+     * If a team, just set projectId as "".
+     * @param teamId
+     * @param projectId
+     * @return
+     */
     FileConfig findByTeamIdAndProjectId(String teamId, String projectId);
 
+    /**
+     * Delete all fileConfig of a team or a project.
+     * If a team, just set projectId as "".
+     * @param teamId
+     * @param projectId
+     * @return
+     */
     boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId);
 
     boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize);

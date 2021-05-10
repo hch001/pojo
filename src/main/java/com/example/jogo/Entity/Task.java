@@ -13,6 +13,8 @@ import java.util.List;
 public class Task implements Serializable {
     @MongoId
     private String _id;
+    private String teamId;
+    private String projectId;
     @Inoperable
     private String time;
     private String taskName;
@@ -27,6 +29,23 @@ public class Task implements Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
     public String getTime() {
         return time;
     }
