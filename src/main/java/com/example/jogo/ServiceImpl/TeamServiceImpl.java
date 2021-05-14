@@ -6,12 +6,16 @@ import com.example.jogo.Service.TeamService;
 import com.example.jogo.repository.TeamRepository;
 import com.mongodb.client.MongoClientFactory;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.print.Doc;
 import java.util.List;
 
 @Service
@@ -25,23 +29,55 @@ public class TeamServiceImpl implements TeamService {
     @Resource(name = "teamCollection")
     private MongoCollection<Document> mongoCollection;
 
-
     @Override
-    public Team getTeamByTeamName(String teamName) {
-        return teamRepository.getTeamByTeamName(teamName);
+    public void save(Team team) {
+        teamRepository.save(team);
     }
 
     @Override
-    public Team getTeamByTeamNameWithField(String teamName, String field) {
-        List<Team> teams = teamRepository.getTeamByTeamNameWithField(teamName,field);
-        return teams.size()==0?null:teams.get(0);
+    public Team findByTeamId(String teamId) {
+        return teamRepository.findBy_id(teamId);
     }
 
     @Override
-    public Team getTeamByTeamNameWithField(String teamName, String field, String attr, String value) {
-        List<Team> teams = teamRepository.getTeamByTeamNameWithField(teamName,field,attr,value);
-        return teams.size()==0?null:teams.get(0);
+    public boolean deleteByTeamId(String teamId) {
+        return teamRepository.deleteBy_id(teamId);
     }
 
+    @Override
+    public boolean setTeamNameByTeamId(String teamId, String newTeamName) {
+        Bson filter = Filters.eq("_id",teamId);
+        Document operations = new Document("$set",new Document("teamName",newTeamName));
+        UpdateResult result = mongoCollection.updateOne(filter,operations);
+
+        return (int)result.getModifiedCount() > 0;
+    }
+
+    @Override
+    public boolean setManagerByTeamId(String teamId, String username) {
+        Bson filter = Filters.eq("_id",teamId);
+        Document operations = new Document("$set",new Document("teamManager",username));
+        UpdateResult result = mongoCollection.updateOne(filter,operations);
+
+        return (int)result.getModifiedCount() > 0;
+    }
+
+    @Override
+    public boolean removeMemberByTeamId(String teamId, String username) {
+        Bson filter = Filters.eq("_id",teamId);
+        Document operations = new Document("$pull",new Document("members",username));
+        UpdateResult result = mongoCollection.updateOne(filter,operations);
+
+        return (int)result.getModifiedCount() > 0;
+    }
+
+    @Override
+    public boolean addMemberByTeamId(String teamId, String username) {
+        Bson filter = Filters.eq("_id",teamId);
+        Document operations = new Document("$push",new Document("members",username));
+        UpdateResult result = mongoCollection.updateOne(filter,operations);
+
+        return (int)result.getModifiedCount() > 0;
+    }
 
 }

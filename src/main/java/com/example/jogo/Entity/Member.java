@@ -1,10 +1,12 @@
 package com.example.jogo.Entity;
 
 import com.example.jogo.MyAnnotation.Unique;
+import com.example.jogo.Utils.IDUtil;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +22,14 @@ public class Member implements Serializable {
     private String email;
     private String teamId;
     private List<String> projectIds;
+    private boolean informed;
+    private String birthday;
     private Date time;
+    private String gender;
 
     public Member(){
         this.time = new Date();
+        this._id = IDUtil.generateID();
     }
 
     public String getUsername() {
@@ -96,5 +102,29 @@ public class Member implements Serializable {
 
     public void setProjectIds(List<String> projectIds) {
         this.projectIds = projectIds;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public boolean isInformed() {
+        return informed;
+    }
+
+    public void setInformed(boolean informed) {
+        this.informed = informed;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

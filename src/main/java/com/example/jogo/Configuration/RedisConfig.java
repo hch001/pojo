@@ -1,5 +1,6 @@
 package com.example.jogo.Configuration;
 
+import com.example.jogo.Entity.Member;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -13,13 +14,25 @@ public class RedisConfig {
      * @param redisConnectionFactory factory to create redisTemplate
      * @return redisTemplate
      */
-    @Bean
-    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
+    @Bean(name = "memberRedisTemplate")
+    public RedisTemplate<String,Object> memberRedisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new JSONSerializer("UTF8"));
-        redisTemplate.setValueSerializer(new MySerializer());
+//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(Member.class));
+//        redisTemplate.setHashValueSerializer(new FastJsonRedisSerializer<>(Member.class));
+
+        return redisTemplate;
+    }
+
+    @Bean(name = "tokenRedisTemplate")
+    public RedisTemplate<String,String> stringRedisTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String,String > redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+
         return redisTemplate;
     }
 }

@@ -6,10 +6,7 @@ import com.example.jogo.Utils.TokenUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +58,10 @@ public class MemberController {
         String msg = memberService.inspectAndAddNewMember(member.getUsername(),member.getPassword()).getMsg();
         if(msg.equals("注册成功"))
             res.put("code","200");
-        else res.put("code","403");
+        else
+            res.put("code","403");
         res.put("msg",msg);
+
         return res;
     }
 
@@ -75,8 +74,65 @@ public class MemberController {
             res.put("code","200");
         }
         else res.put("code","403");
+
         return res;
     }
 
+    @RequestMapping(value = "/get",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> get(HttpServletRequest request){
+        Map<String,Object> res = new HashMap<>();
+        try{
+            String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
+            System.out.println("username:"+username);
+            Member member = memberService.findByUsername(username);
+            System.out.println(member);
+            if(member==null){
+                res.put("code","403");
+                return res;
+            }
+            res.put("code","200");
+            member.setPassword("");
+            res.put("member",member);
+        }catch (UnsupportedEncodingException e){
+            res.put("code","403");
+        }
+        return res;
+    }
 
+    @RequestMapping(value = "/modify",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,String> set(HttpServletRequest request, @RequestBody Member member){
+        Map<String,String> res = new HashMap<>();
+        try{
+            String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
+            System.out.println("username:"+username);
+            Member oldMember = memberService.findByUsername(username);
+            if(member == null || !member.getUsername().equals(username)){
+                res.put("code","403");
+                return res;
+            }
+            if(isChanged(oldMember.getEmail(),member.getEmail()))
+                memberService.setStringField(username,"email",member.getEmail());
+            if(isChanged(oldMember.getPhone(),member.getPhone()))
+                memberService.setStringField(username,"phone",member.getPhone());
+            if(isChanged(oldMember.getNickName(),member.getNickName()))
+                memberService.setStringField(username,"nickName",member.getPhone());
+            if(isChanged(oldMember.getGender(),member.getGender()))
+                memberService.setStringField(username,"gender",member.getGender());
+            if(isChanged(oldMember.getBirthday(),member.getBirthday()))
+                memberService.setStringField(username,"birthday",member.getBirthday());
+            if(isChanged(oldMember.isInformed(),member.isInformed()))
+                memberService.setInformed(username, member.isInformed());
+
+            res.put("code","200");
+        }catch (UnsupportedEncodingException e){
+            res.put("code","403");
+        }
+        return res;
+    }
+
+    private boolean isChanged(Object o1,Object o2){
+        return o1==null||!o1.equals(o2);
+    }
 }

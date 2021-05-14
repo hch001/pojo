@@ -25,6 +25,7 @@ public class MyListener implements ServletContextListener {
         ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContextEvent.getServletContext());
         memberService=applicationContext.getBean(MemberServiceImpl.class);
         memberService.cacheMembers();
+
     }
 
     @Override

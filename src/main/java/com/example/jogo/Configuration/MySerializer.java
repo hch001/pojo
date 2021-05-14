@@ -20,6 +20,7 @@ public class MySerializer implements RedisSerializer<Object> {
             oos.writeObject(o);
             return baos.toByteArray();
         } catch (IOException e) {
+            e.printStackTrace();
             logger.error("序列化对象时出错");
         }
         return null;

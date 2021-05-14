@@ -25,8 +25,8 @@ public interface MemberRepository extends MongoRepository<Member,String> {
      * @param value
      * @return
      */
-    default boolean setSelfInfo(MongoCollection<Document> mongoCollection, String username, String field, String value){
-        HashSet<String> set = new HashSet<>(){{add("email");add("phone");add("nickName");}};
+    default boolean setStringField(MongoCollection<Document> mongoCollection, String username, String field, String value){
+        HashSet<String> set = new HashSet<>(){{add("email");add("phone");add("nickName");add("gender");add("birthday");}};
         if(!set.contains(field)) return false;
         Bson filter = Filters.eq("username",username);
         Document operations = new Document("$set",new Document(field,value));
@@ -51,12 +51,21 @@ public interface MemberRepository extends MongoRepository<Member,String> {
     default boolean leaveProject(MongoCollection<Document> mongoCollection,String username,String projectId){
         Bson filter = Filters.eq("username",username);
         Document operations = new Document("$pull",new Document("projectIds",projectId));
+
         return mongoCollection.updateOne(filter,operations).getModifiedCount()>=1;
     }
 
     default boolean joinProject(MongoCollection<Document> mongoCollection,String username,String projectIds){
         Bson filter = Filters.eq("username",username);
         Document operations = new Document("$push",new Document("projectIds",projectIds));
+
+        return mongoCollection.updateOne(filter,operations).getModifiedCount()>=1;
+    }
+
+    default boolean setInformed(MongoCollection<Document> mongoCollection,String username,boolean informed) {
+        Bson filter = Filters.eq("username",username);
+        Document operations = new Document("$set",new Document("informed",informed));
+
         return mongoCollection.updateOne(filter,operations).getModifiedCount()>=1;
     }
 }

@@ -38,7 +38,7 @@ public class TokenInterceptor implements HandlerInterceptor {
                 }
             }
             catch (UnsupportedEncodingException | JWTVerificationException e){
-                logger.info("token解析错误或者已经过期");
+                logger.warn("token解析错误或者已经过期");
                 response.setStatus(401);
             }
             finally {

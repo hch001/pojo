@@ -1,6 +1,7 @@
 package com.example.jogo.Entity;
 
 import com.example.jogo.MyAnnotation.Inoperable;
+import com.example.jogo.Utils.IDUtil;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -16,22 +17,28 @@ public class Team implements Serializable {
     @Inoperable
     private Date time;
     private String teamManager;
-    private List<String> members;
-    private List<Project> projects;
-    private List<FileInfo> files;
-    private FileConfig fileConfig;
-    private List<Authority> authorities;
-    private List<Log> logs;
-    private List<Notice> notices;
+    private List<String> members; // usernames
+//    private List<Project> projects; // projectIds
+//    private List<FileInfo> files;
+//    private FileConfig fileConfig;
+//    private List<Authority> authorities;
+//    private List<Log> logs;
+//    private List<Notice> notices;
     private String description;
 
-    public String get_id() {
-        return _id;
+    public Team(){
+        this.time = new Date();
+        this._id = IDUtil.generateID();
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public String get_id(){
+        return this._id;
     }
+
+    public void set_id(String _id){
+        this._id=_id;
+    }
+
     public String getTeamName() {
         return teamName;
     }
@@ -64,53 +71,53 @@ public class Team implements Serializable {
         this.members = members;
     }
 
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public List<FileInfo> getfiles() {
-        return files;
-    }
-
-    public void setfiles(List<FileInfo> files) {
-        this.files = files;
-    }
-
-    public FileConfig getFileConfig() {
-        return fileConfig;
-    }
-
-    public void setFileConfig(FileConfig fileConfig) {
-        this.fileConfig = fileConfig;
-    }
-
-    public List<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public List<Log> getLogs() {
-        return logs;
-    }
-
-    public void setLogs(List<Log> logs) {
-        this.logs = logs;
-    }
-
-    public List<Notice> getNotices() {
-        return notices;
-    }
-
-    public void setNotices(List<Notice> notices) {
-        this.notices = notices;
-    }
+//    public List<Project> getProjects() {
+//        return projects;
+//    }
+//
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
+//
+//    public List<FileInfo> getFiles() {
+//        return files;
+//    }
+//
+//    public void setFiles(List<FileInfo> files) {
+//        this.files = files;
+//    }
+//
+//    public FileConfig getFileConfig() {
+//        return fileConfig;
+//    }
+//
+//    public void setFileConfig(FileConfig fileConfig) {
+//        this.fileConfig = fileConfig;
+//    }
+//
+//    public List<Authority> getAuthorities() {
+//        return authorities;
+//    }
+//
+//    public void setAuthorities(List<Authority> authorities) {
+//        this.authorities = authorities;
+//    }
+//
+//    public List<Log> getLogs() {
+//        return logs;
+//    }
+//
+//    public void setLogs(List<Log> logs) {
+//        this.logs = logs;
+//    }
+//
+//    public List<Notice> getNotices() {
+//        return notices;
+//    }
+//
+//    public void setNotices(List<Notice> notices) {
+//        this.notices = notices;
+//    }
 
     public String getDescription() {
         return description;

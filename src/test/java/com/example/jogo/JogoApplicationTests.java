@@ -1,12 +1,10 @@
 package com.example.jogo;
 
-import com.example.jogo.Entity.FileConfig;
-import com.example.jogo.Entity.Log;
-import com.example.jogo.Service.FileConfigService;
-import com.example.jogo.Service.FileInfoService;
-import com.example.jogo.Service.LogService;
+
+import com.example.jogo.Service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 
@@ -18,15 +16,18 @@ class JogoApplicationTests {
     }
 
     @Resource
-    private LogService logService;
+    private ProjectService projectService;
+    @Resource
+    private TeamService teamService;
+    @Resource
+    private MemberService memberService;
+    @Resource(name = "memberRedisTemplate")
+    private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private FileInfoService fileInfoService;
 
     @Test
     void t() {
-        Log log = new Log();
-        log.setDetail("download file");
-        log.setTeamId("team1");
-        log.setTeamId("project1");
-        log.setUsername("user1");
-        logService.asynSave(log);
+        System.out.println(fileInfoService.deleteAllFiles("team1","project1"));
     }
 }

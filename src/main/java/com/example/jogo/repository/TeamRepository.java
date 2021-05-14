@@ -19,47 +19,15 @@ import java.util.List;
 
 @Repository
 public interface TeamRepository extends MongoRepository<Team,String> {
-    Team getTeamByTeamName(String teamName);
-    @Query(value = "{'teamName':?0}",fields = "{?1:{$elemMatch:{'?2':?3}}}")
-    List<Team> getTeamByTeamNameWithField(String teamName,String field,String attr,String value);
-    @Query(value = "{'teamName':?0}",fields = "{?1:true}")
-    List<Team> getTeamByTeamNameWithField(String teamName,String field);
+    Team findBy_id(String teamId);
 
-    boolean deleteAllByTeamName(String teamName);
-
-    default int setTeamNameByTeamName(MongoCollection<Document> mongoCollection,String teamName,String newTeamName){
-        Bson filter = Filters.eq("teamName",teamName);
-        Document operations = new Document("$set",new Document("teamName",newTeamName));
-        UpdateResult result = mongoCollection.updateOne(filter,operations);
-
-        return (int)result.getModifiedCount();
-    }
-
-    default int setManagerByTeamName(MongoCollection<Document> mongoCollection, String teamName,String manager_id){
-        Bson filter = Filters.eq("teamName",teamName);
-        Document operations = new Document("$set",new Document("teamManager",manager_id));
-        UpdateResult result = mongoCollection.updateOne(filter,operations);
-
-        return (int)result.getModifiedCount();
-    }
-
-    default int deleteMemberByTeamName(MongoCollection<Document> mongoCollection, String teamName, String member_id){
-
-        Bson filter = Filters.eq("teamName",teamName);
-        Document operations = new Document("$pull",new Document("members",member_id));
-        UpdateResult result = mongoCollection.updateOne(filter,operations);
-
-        return (int)result.getModifiedCount();
-    }
-
-    default int addMemberByTeamName(MongoCollection<Document> mongoCollection, String teamName, String member_id){
-        Bson filter = Filters.eq("teamName",teamName);
-        Document operations = new Document("$push",new Document("members",member_id));
-        UpdateResult result = mongoCollection.updateOne(filter,operations);
-
-        return (int)result.getModifiedCount();
-    }
+    boolean deleteBy_id(String teamId);
 
 
 
+
+    //    @Query(value = "{'_id':?0}",fields = "{?1:{$elemMatch:{'?2':?3}}}")
+//    List<Team> getTeamByTeamIdWithField(String teamId,String field,String attr,String value);
+//    @Query(value = "{'_id':?0}",fields = "{?1:true}")
+//    List<Team> getTeamBy_idWithField(String teamId,String field);
 }

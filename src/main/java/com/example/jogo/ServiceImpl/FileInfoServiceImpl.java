@@ -36,7 +36,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
-    public boolean deleteFile(FileInfo fileInfo) {
+    public boolean deleteAFile(FileInfo fileInfo) {
         String path,rootPath=env.getProperty("rootPath");
         if(fileInfo.getProjectId().equals(""))
             path = rootPath+"/"+fileInfo.getTeamId()+"/"+fileInfo.getFileName();
@@ -47,6 +47,27 @@ public class FileInfoServiceImpl implements FileInfoService {
             return false;
 
         return file.delete();
+    }
+
+    @Override
+    public boolean deleteAllFiles(String teamId, String projectId) {
+        String path,rootPath=env.getProperty("rootPath");
+        if(projectId.equals(""))
+            path = rootPath+"/"+teamId;
+        else path = rootPath+"/"+teamId+"/"+projectId;
+
+        boolean res= true;
+        File file = new File(path);
+        for(File f:file.listFiles()){
+            if(f.isFile())
+                res &= f.delete();
+            else
+                for(File childFile: f.listFiles())
+                    res &= childFile.delete();
+        }
+
+
+        return res;
     }
 
     @Override

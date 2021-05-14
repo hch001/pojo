@@ -56,7 +56,9 @@ public interface MemberService {
      * @param value value you want to set
      * @return true if successful
      */
-    boolean setSelfInfo(String username,String field,String value);
+    boolean setStringField(String username,String field,String value);
+
+    boolean setInformed(String username,boolean informed);
 
     /**
      * remove a teamId in {@link Member} object and cache in Redis will be also modified

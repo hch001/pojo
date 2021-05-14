@@ -31,7 +31,12 @@ public interface FileInfoService {
      * @param fileInfo
      * @return
      */
-    boolean deleteFile(FileInfo fileInfo);
+    boolean deleteAFile(FileInfo fileInfo);
+
+    /**
+     * Delete all files that belong to a team or a project. If a team, just set projectId to "".
+     */
+    boolean deleteAllFiles(String teamId,String projectId);
 
     /**
      * Get all fileInfo objects that belong to a team or o project.
