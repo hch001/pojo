@@ -27,9 +27,9 @@ public class FileInfo implements Serializable {
     @Inoperable
     private Integer downloads;
     @Inoperable
-    private Integer size;
+    private Double size;
     @Inoperable
-    private final Date time;
+    private Date time;
 
     public FileInfo(){
         time = new Date();
@@ -99,15 +99,19 @@ public class FileInfo implements Serializable {
         this.downloads = downloads;
     }
 
-    public Integer getSize() {
+    public Double getSize() {
         return size;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(Double size) {
         this.size = size;
     }
 
     public Date getTime() {
         return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

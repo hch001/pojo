@@ -39,4 +39,6 @@ public interface AssessmentService {
      * @return true if set successfully or false if the Assessment Object not exists
      */
     boolean setDescription(String teamId,String projectId,String username,String description,String evaluator);
+
+    Assessment assessment(String teamId,String projectId,String username,double score,String description,String evaluator);
 }

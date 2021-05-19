@@ -6,6 +6,7 @@ import com.example.jogo.repository.AssessmentRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,12 +35,16 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public boolean deleteByTeamIdAndProjectIdAndUsername(String teamId, String projectId, String username) {
-        return assessmentRepository.deleteByTeamIdAndProjectIdAndUsername(teamId,projectId,username);
+        if(assessmentRepository.findByTeamIdAndProjectIdAndUsername(teamId,projectId,username)==null)
+            return false;
+        assessmentRepository.deleteByTeamIdAndProjectIdAndUsername(teamId,projectId,username);
+        return true;
     }
 
     @Override
     public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId) {
-        return assessmentRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        assessmentRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        return true;
     }
 
     @Override
@@ -68,5 +73,19 @@ public class AssessmentServiceImpl implements AssessmentService {
         assessmentRepository.save(assessment);
 
         return true;
+    }
+
+    @Override
+    public Assessment assessment(String teamId, String projectId, String username, double score, String description, String evaluator) {
+        Assessment assessment = new Assessment();
+        assessment.setTeamId(teamId);
+        assessment.setProjectId(projectId);
+        assessment.setUsername(username);
+        assessment.setScore(score);
+        assessment.setTime(new Date());
+        assessment.setDescription(description);
+        assessment.setEvaluator(evaluator);
+
+        return assessment;
     }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends MongoRepository<Project,String> {
     Project findBy_id(String _id);
-    boolean deleteBy_id(String projectId);
+    Long deleteBy_id(String projectId);
     List<Project> findAllByTeamId(String teamId);
 }

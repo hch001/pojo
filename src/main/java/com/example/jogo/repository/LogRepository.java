@@ -10,5 +10,5 @@ import java.util.List;
 public interface LogRepository extends MongoRepository<Log,String> {
     List<Log> findAllByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
     List<Log> findAllByTeamIdAndProjectId(String teamId,String projectId);
-    boolean deleteAllByTeamIdAndProjectId(String teamId,String projectId);
+    Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
 }

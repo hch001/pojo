@@ -10,6 +10,6 @@ import java.util.List;
 public interface AuthorityRepository extends MongoRepository<Authority,String> {
     Authority findByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
     List<Authority> findAllByTeamIdAndProjectId(String teamId,String projectId);
-    boolean deleteByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
-    boolean deleteAllByTeamIdAndProjectId(String teamId,String projectId);
+    Long deleteByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
+    Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
 }

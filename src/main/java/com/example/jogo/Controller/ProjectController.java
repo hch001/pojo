@@ -2,6 +2,7 @@ package com.example.jogo.Controller;
 
 import com.example.jogo.Entity.*;
 import com.example.jogo.Service.*;
+import com.example.jogo.Utils.StateUtil;
 import com.example.jogo.Utils.TokenUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -9,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/project")
@@ -35,6 +34,8 @@ public class ProjectController {
     @Resource
     private TaskService taskService;
     @Resource
+    private InvitationService invitationService;
+    @Resource
     private TokenUtil tokenUtil;
 
     /**
@@ -42,68 +43,150 @@ public class ProjectController {
      */
     @RequestMapping(value = "/projectView",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> getBasicData(HttpServletRequest request, @RequestBody Project p){
+    public Map<String,Object> getBasicData(HttpServletRequest request, @RequestBody Map<String,String> params){
         Map<String,Object> res = new HashMap<>();
         try{
-            String projectId = p.get_id();
+            String projectId = params.get("projectId");
             String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
-            System.out.println("projectId:"+projectId);
+
             Project project = projectService.findByProjectId(projectId);
+
             /* not such member or not such project will throw NullPointerException. */
             if(!project.getMembers().contains(username))
-                throw new NullPointerException();
+                throw new IllegalAccessException();
 
             /* set isManager to true if this member is the manager of the project and will throw NullPointerException if projectManager not set. */
             if(project.getProjectManager().equals(username))
                 res.put("isManager",true);
             else res.put("isManager",false);
-            res.put("code","200");
 
-        } catch (UnsupportedEncodingException | NullPointerException e) {
-            res.put("code","403");
-            res.put("msg","参数错误");
-            return res;
+            StateUtil.setSuccess(res);
+        } catch (UnsupportedEncodingException e) {
+            StateUtil.setTokenError(res);
+        } catch (IllegalAccessException e) {
+            StateUtil.setAuthorityError(res);
+        } catch (NullPointerException e) {
+            StateUtil.setNullObjectError(res);
         }
         return res;
     }
 
     @RequestMapping(value = "/projectMain",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> getMain(HttpServletRequest request, @RequestBody Project p) {
+    public Map<String,Object> getMain(HttpServletRequest request, @RequestBody Map<String,String> params) {
         Map<String ,Object> res = new HashMap<>();
         try {
-            String projectId = p.get_id();
+            String projectId = params.get("projectId");
             Project project = projectService.findByProjectId(projectId);
             String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
+
             if(!project.getMembers().contains(username))
-                throw new NullPointerException();
+                throw new IllegalAccessException();
+
             res.put("project",project);
-            res.put("code","200");
-        } catch (Exception e){
-            res.put("code","403");
+            StateUtil.setSuccess(res);
+        } catch (UnsupportedEncodingException e){
+            StateUtil.setTokenError(res);
+        } catch (IllegalAccessException e) {
+            StateUtil.setAuthorityError(res);
+        } catch (NullPointerException e) {
+            StateUtil.setNullObjectError(res);
         }
         return res;
     }
 
     @RequestMapping(value = "/destroy",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> destroyProject(HttpServletRequest request, Project p, Team t) {
-        Map<String,String> res = new HashMap<>();
+    public Map<String,Object> destroyProject(HttpServletRequest request,@RequestBody Map<String,String> params) {
+        Map<String,Object> res = new HashMap<>();
         try{
+            String projectId = params.get("projectId");
+            String teamId = params.get("teamId");
+
             String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
-            String projectId = p.get_id();
-            String teamId = t.get_id();
             Project project = projectService.findByProjectId(projectId);
+
             if(project.getProjectManager().equals(username)) {
                 assessmentService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 authorityService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 fileConfigService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 fileInfoService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+                fileInfoService.deleteAllFiles(teamId,projectId);
+                invitationService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+                logService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+                noticeService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+                taskService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+
+                List<String> members = project.getMembers();
+                members.forEach((name)->{
+                    memberService.leaveProject(name,projectId);
+                });
+
+                projectService.deleteByProjectId(projectId);
+
+                Log log = new Log();
+                log.setUsername(username);
+                log.setProjectId(projectId);
+                log.setTeamId(teamId);
+                log.setTime(new Date());
+                log.setDetail("解散了<"+project.getProjectName()+">项目("+projectId+")");
+                logService.asynSave(log);
+
+                StateUtil.setSuccess(res);
+            } else {
+                throw new IllegalAccessException();
             }
-        } catch (Exception e) {
-            res.put("code","403");
+        } catch (UnsupportedEncodingException e) {
+            StateUtil.setTokenError(res);
+        } catch (IllegalAccessException e) {
+            StateUtil.setAuthorityError(res);
+        } catch (NullPointerException e) {
+            StateUtil.setNullObjectError(res);
         }
         return res;
     }
 
+    @RequestMapping(value = "/modify",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> modify(HttpServletRequest request,@RequestBody Project p){
+        Map<String,Object> res = new HashMap<>();
+        try{
+            String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
+            String projectId = p.get_id();
+            String teamId = p.getTeamId();
+            Project oldProject = projectService.findByProjectId(projectId);
+
+            boolean canModifyProjectInfo = authorityService.findByTeamIdAndProjectIdAndUsername(teamId,projectId,username).getModifyProjectInfo();
+            if(!canModifyProjectInfo)
+                throw new IllegalAccessException();
+
+            Log log = logService.log(teamId,"",username,"");
+
+            if(isChanged(oldProject.getProjectName(),p.getProjectName())) {
+                projectService.setManagerByProjectId(projectId, p.getProjectManager());
+                log.setDetail("将项目名称改为"+p.getProjectName());
+                logService.save(log);
+            }
+            if(isChanged(oldProject.getDescription(),p.getDescription())) {
+                projectService.setDescription(projectId, p.getDescription());
+                log.setDetail("将项目介绍改为"+p.getDescription());
+                logService.save(log);
+            }
+
+            StateUtil.setSuccess(res);
+        } catch (UnsupportedEncodingException e) {
+            StateUtil.setTokenError(res);
+        } catch (IllegalAccessException e) {
+            StateUtil.setAuthorityError(res);
+        } catch (NullPointerException e) {
+            StateUtil.setNullObjectError(res);
+        }
+
+        return res;
+    }
+
+
+    private boolean isChanged(Object o1,Object o2){
+        return o1==null||!o1.equals(o2);
+    }
 }

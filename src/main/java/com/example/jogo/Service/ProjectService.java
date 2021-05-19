@@ -15,6 +15,8 @@ public interface ProjectService {
 
     boolean setProjectNameByProjectId(String projectId, String newProjectName);
 
+    boolean setDescription(String projectId,String description);
+
     boolean setManagerByProjectId(String projectId, String username);
 
     boolean removeMemberByProjectId(String projectId, String username);

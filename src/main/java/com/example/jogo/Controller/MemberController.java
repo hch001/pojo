@@ -84,9 +84,9 @@ public class MemberController {
         Map<String,Object> res = new HashMap<>();
         try{
             String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
-            System.out.println("username:"+username);
+
             Member member = memberService.findByUsername(username);
-            System.out.println(member);
+
             if(member==null){
                 res.put("code","403");
                 return res;
@@ -102,11 +102,11 @@ public class MemberController {
 
     @RequestMapping(value = "/modify",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> set(HttpServletRequest request, @RequestBody Member member){
+    public Map<String,String> modify(HttpServletRequest request, @RequestBody Member member){
         Map<String,String> res = new HashMap<>();
         try{
             String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
-            System.out.println("username:"+username);
+
             Member oldMember = memberService.findByUsername(username);
             if(member == null || !member.getUsername().equals(username)){
                 res.put("code","403");

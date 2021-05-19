@@ -35,4 +35,18 @@ public interface AuthorityService {
      */
     boolean replace(Authority authority);
 
+    boolean setAsProjectLeader(String teamId,String projectId,String username);
+
+    boolean setAsTeamLeader(String teamId,String username);
+
+    /**
+     * After saving a authority object, calling setAllFalse to set all fields to false.
+     * @param teamId
+     * @param projectId
+     * @param username
+     * @return
+     */
+    boolean setAllFalse(String teamId,String projectId,String username);
+
+    Authority authority(String teamId,String projectId,String username);
 }

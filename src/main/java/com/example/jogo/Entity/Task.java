@@ -16,7 +16,7 @@ public class Task implements Serializable {
     private String teamId;
     private String projectId;
     @Inoperable
-    private String time;
+    private Date time;
     private String taskName;
     private List<String> members;
     private Date deadline;
@@ -46,11 +46,11 @@ public class Task implements Serializable {
         this.projectId = projectId;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

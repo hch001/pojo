@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends MongoRepository<Notice,String> {
     List<Notice> findAllByTeamIdAndProjectId(String teamId,String projectId);
-    boolean deleteBy_id(String _id);
-    boolean deleteAllByTeamIdAndProjectId(String teamId,String projectId);
+    Notice findBy_id(String _id);
+    Long deleteBy_id(String _id);
+    Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
 }

@@ -45,13 +45,25 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public boolean deleteByProjectId(String projectId) {
-        return projectRepository.deleteBy_id(projectId);
+        if(projectRepository.findBy_id(projectId)==null)
+            return false;
+        projectRepository.deleteBy_id(projectId);
+        return true;
     }
 
     @Override
     public boolean setProjectNameByProjectId(String projectId, String newProjectName) {
         Bson filter = Filters.eq("_id",projectId);
         Document operations = new Document("$set",new Document("projectName",newProjectName));
+        UpdateResult result = mongoCollection.updateOne(filter,operations);
+
+        return (int)result.getModifiedCount() > 0;
+    }
+
+    @Override
+    public boolean setDescription(String projectId,String description) {
+        Bson filter = Filters.eq("_id",projectId);
+        Document operations = new Document("$set",new Document("description",description));
         UpdateResult result = mongoCollection.updateOne(filter,operations);
 
         return (int)result.getModifiedCount() > 0;

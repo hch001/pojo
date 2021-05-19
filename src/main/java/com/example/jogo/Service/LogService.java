@@ -10,4 +10,5 @@ public interface LogService {
     boolean deleteAllByTeamIdAndProjectId(String teamId,String projectId);
     boolean save(Log log);
     void asynSave(Log log);
+    Log log(String teamId,String projectId,String username,String detail);
 }

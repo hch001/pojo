@@ -14,4 +14,7 @@ public interface NoticeService {
      * @param notice
      */
     void save(Notice notice);
+
+    Notice notice(String teamId,String projectId,String title,String content,int priority);
+
 }

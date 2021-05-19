@@ -21,6 +21,10 @@ public interface MemberService {
      */
     Member findByUsername(String username);
 
+    List<Member> findAllByNickNameStartsWith(String nickName);
+
+    List<Member> findAllByUsernameStartingWith(String username);
+
     /**
      * get all members from MongoDB.
      * @return

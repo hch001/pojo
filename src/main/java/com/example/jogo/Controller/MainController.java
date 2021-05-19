@@ -6,6 +6,7 @@ import com.example.jogo.Entity.Team;
 import com.example.jogo.Service.MemberService;
 import com.example.jogo.Service.ProjectService;
 import com.example.jogo.Service.TeamService;
+import com.example.jogo.Utils.StateUtil;
 import com.example.jogo.Utils.TokenUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,21 +43,29 @@ public class MainController {
         Map<String,Object> res = new HashMap<>();
         try{
             String username = (String) tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
-            if(username==null || !memberService.isExist(username)) {
-                res.put("code","403");
-                return res;
-            }
             Member member = memberService.findByUsername(username);
+            if(member==null)
+                throw new NullPointerException();
+
             List<String> projectIds = member.getProjectIds();
-            List<Project> projects = new ArrayList<>();
+            List<Object> projects = new ArrayList<>();
             projectIds.forEach((id)->{
-                projects.add(projectService.findByProjectId(id));
+                Project project = projectService.findByProjectId(id);
+                projects.add(new HashMap<>(){{
+                    put("_id",id);
+                    put("projectName",project.getProjectName());
+                }});
             });
 
+            Team team = teamService.findByTeamId(member.getTeamId());
             res.put("projects",projects);
-            res.put("team",teamService.findByTeamId(member.getTeamId()));
+            res.put("team",new HashMap<>(){{
+                put("teamId",team.get_id());
+                put("teamName",team.getTeamName());
+            }});
+            StateUtil.setSuccess(res);
         }catch (UnsupportedEncodingException e){
-            logger.error("UnsupportedEncodingException");
+            StateUtil.setTokenError(res);
         }
         return res;
     }

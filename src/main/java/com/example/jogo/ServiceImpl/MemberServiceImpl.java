@@ -59,6 +59,16 @@ public class MemberServiceImpl implements MemberService {
         return res==null?memberRepository.findByUsername(username):res;
     }
 
+    @Override
+    public List<Member> findAllByNickNameStartsWith(String nickName) {
+        return memberRepository.findAllByNickNameStartsWith(nickName);
+    }
+
+    @Override
+    public List<Member> findAllByUsernameStartingWith(String username) {
+        return memberRepository.findAllByUsernameStartsWith(username);
+    }
+
     private Member findByUsernameInCache(String username) {
         Object o = memberRedisTemplate.opsForValue().get(username);
 

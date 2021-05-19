@@ -16,6 +16,8 @@ import java.util.List;
 public interface MemberRepository extends MongoRepository<Member,String> {
     @NotNull List<Member> findAll();
     Member findByUsername(String username);
+    List<Member> findAllByNickNameStartsWith(String nickName);
+    List<Member> findAllByUsernameStartsWith(String username);
 
     /**
      * modify {@code Member.email}, {@code Member.phone} or {@code Member.nickName}.
@@ -43,7 +45,7 @@ public interface MemberRepository extends MongoRepository<Member,String> {
 
     default boolean joinTeam(MongoCollection<Document> mongoCollection,String username,String teamId){
         Bson filter = Filters.eq("username",username);
-        Document operations = new Document("set",new Document("teamId",teamId));
+        Document operations = new Document("$set",new Document("teamId",teamId));
 
         return mongoCollection.updateOne(filter,operations).getModifiedCount()>=1;
     }

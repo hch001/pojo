@@ -73,5 +73,7 @@ public interface FileInfoService {
      */
     boolean save(FileInfo fileInfo);
 
+    FileInfo fileInfo(String teamId,String projectId,String filename,String uploader,double size,int downloads);
 
+    boolean increaseDownloads(String teamId,String projectId,String filename);
 }

@@ -21,13 +21,5 @@ import java.util.List;
 public interface TeamRepository extends MongoRepository<Team,String> {
     Team findBy_id(String teamId);
 
-    boolean deleteBy_id(String teamId);
-
-
-
-
-    //    @Query(value = "{'_id':?0}",fields = "{?1:{$elemMatch:{'?2':?3}}}")
-//    List<Team> getTeamByTeamIdWithField(String teamId,String field,String attr,String value);
-//    @Query(value = "{'_id':?0}",fields = "{?1:true}")
-//    List<Team> getTeamBy_idWithField(String teamId,String field);
+    Long deleteBy_id(String teamId);
 }

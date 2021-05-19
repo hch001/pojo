@@ -17,7 +17,6 @@ public class FileConfigServiceImpl implements FileConfigService {
     private FileConfigRepository fileConfigRepository;
     @Resource
     private Environment env;
-    private static final int MAX_SIZE = 100; // MB
     private static final List<String> DEFAULT_ALLOWED_TYPES = new ArrayList<>(){{
         add("doc");
         add("docx");
@@ -74,7 +73,8 @@ public class FileConfigServiceImpl implements FileConfigService {
 
     @Override
     public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId){
-        return fileConfigRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        fileConfigRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        return true;
     }
 
     @Override
@@ -90,6 +90,23 @@ public class FileConfigServiceImpl implements FileConfigService {
     @Override
     public boolean setUsed(String teamId,String projectId,int newUsed){
         return fileConfigRepository.setUsed(teamId,projectId,newUsed);
+    }
+
+    @Override
+    public FileConfig fileConfig(String teamId, String projectId, int maxSizePerFile, List<String> allowedTypes) {
+        FileConfig fileConfig = new FileConfig();
+
+        fileConfig.setTeamId(teamId);
+        fileConfig.setProjectId(projectId);
+        fileConfig.setMaxSizePerFile(maxSizePerFile);
+        fileConfig.setAllowedTypes(allowedTypes);
+
+        return fileConfig;
+    }
+
+    @Override
+    public void save(FileConfig fileConfig) {
+        fileConfigRepository.save(fileConfig);
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface FileConfigRepository extends MongoRepository<FileConfig,String> {
     FileConfig findByTeamIdAndProjectId(String teamId,String projectId);
-    boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId);
+    Long deleteAllByTeamIdAndProjectId(String teamId, String projectId);
 
     default boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize){
         FileConfig fileConfig = findByTeamIdAndProjectId(teamId,projectId);

@@ -3,8 +3,10 @@ package com.example.jogo.ServiceImpl;
 import com.example.jogo.Entity.FileInfo;
 import com.example.jogo.Service.FileInfoService;
 import com.example.jogo.repository.FileInfoRepository;
+import com.mongodb.client.model.Filters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.conversions.Bson;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,12 +30,16 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId) {
-        return fileInfoRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        fileInfoRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        return true;
     }
 
     @Override
     public boolean deleteByTeamIdAndProjectIdAndFileName(String teamId, String projectId, String fileName) {
-        return fileInfoRepository.deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+        if(fileInfoRepository.findByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName)==null)
+            return false;
+        fileInfoRepository.deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+        return true;
     }
 
     @Override
@@ -58,14 +65,15 @@ public class FileInfoServiceImpl implements FileInfoService {
 
         boolean res= true;
         File file = new File(path);
-        for(File f:file.listFiles()){
-            if(f.isFile())
-                res &= f.delete();
-            else
-                for(File childFile: f.listFiles())
+        if(file.listFiles()!=null) {
+            for(File f:file.listFiles()){
+                for (File childFile : f.listFiles())
                     res &= childFile.delete();
+                res &= f.delete();
+            }
         }
-
+        if(projectId.equals(""))
+            res&=file.delete();
 
         return res;
     }
@@ -85,6 +93,32 @@ public class FileInfoServiceImpl implements FileInfoService {
         if(fileInfoRepository.findByTeamIdAndProjectIdAndFileName(fileInfo.getTeamId(),fileInfo.getTeamId(),fileInfo.getFileName())!=null)
             return false;
         fileInfoRepository.save(fileInfo);
+        return true;
+    }
+
+    @Override
+    public FileInfo fileInfo(String teamId, String projectId, String filename, String uploader, double size, int downloads) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setTeamId(teamId);
+        fileInfo.setProjectId(projectId);
+        fileInfo.setFileName(filename);
+        fileInfo.setUploader(uploader);
+        fileInfo.setSize(size);
+        fileInfo.setDownloads(downloads);
+        fileInfo.setTime(new Date());
+
+        return fileInfo;
+    }
+
+    @Override
+    public boolean increaseDownloads(String teamId, String projectId, String filename) {
+        FileInfo fileInfo = findByTeamIdAndProjectIdAndFileName(teamId,projectId,filename);
+        if(fileInfo==null)
+            return false;
+        fileInfo.setDownloads(fileInfo.getDownloads()+1);
+        deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,filename);
+        save(fileInfo);
+
         return true;
     }
 

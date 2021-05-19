@@ -5,6 +5,7 @@ import com.example.jogo.Entity.FileConfig;
 import java.util.List;
 
 public interface FileConfigService {
+    public static final int MAX_SIZE = 100; // MB
     /**
      * Add a default fileConfig setting into a new team or project.
      * If a team, just set projectId as "".
@@ -57,4 +58,8 @@ public interface FileConfigService {
     boolean setAllowedTypes(String teamId, String projectId, List<String> types);
 
     boolean setUsed(String teamId,String projectId,int newUsed);
+
+    FileConfig fileConfig(String teamId,String projectId,int maxSizePerFile,List<String> allowedTypes);
+
+    void save(FileConfig fileConfig);
 }

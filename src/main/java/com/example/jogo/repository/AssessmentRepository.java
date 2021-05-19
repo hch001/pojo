@@ -14,6 +14,6 @@ public interface AssessmentRepository extends MongoRepository<Assessment,String>
     Assessment findByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
     List<Assessment> findAllByTeamIdAndProjectId(String teamId,String projectId);
 
-    boolean deleteByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
-    boolean deleteAllByTeamIdAndProjectId(String teamId,String projectId);
+    Long deleteByTeamIdAndProjectIdAndUsername(String teamId,String projectId,String username);
+    Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
 }

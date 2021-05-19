@@ -10,6 +10,7 @@ import static com.example.jogo.Consumer.LogConsumer.QUEUE_NAME;
 
 import javax.annotation.Resource;
 import javax.jms.Destination;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,7 +32,8 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId) {
-        return logRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        logRepository.deleteAllByTeamIdAndProjectId(teamId,projectId);
+        return true;
     }
 
     @Override
@@ -45,6 +47,19 @@ public class LogServiceImpl implements LogService {
         Destination destination = new ActiveMQQueue(QUEUE_NAME);
         logProducer.sendMsg(destination,log);
 
+    }
+
+    @Override
+    public Log log(String teamId, String projectId, String username, String detail) {
+
+        Log log = new Log();
+        log.setTeamId(teamId);
+        log.setProjectId(projectId);
+        log.setUsername(username);
+        log.setDetail(detail);
+        log.setTime(new Date());
+
+        return log;
     }
 
 }

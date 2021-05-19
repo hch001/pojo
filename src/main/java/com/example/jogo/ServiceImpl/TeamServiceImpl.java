@@ -41,7 +41,10 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public boolean deleteByTeamId(String teamId) {
-        return teamRepository.deleteBy_id(teamId);
+        if(teamRepository.findBy_id(teamId)==null)
+            return false;
+        teamRepository.deleteBy_id(teamId);
+        return true;
     }
 
     @Override
