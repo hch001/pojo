@@ -41,7 +41,7 @@ public class ProjectMemberController {
     @Resource
     private TaskService taskService;
     @Resource
-    private InvitationService invitationService;
+    private MessageService messageService;
     @Resource
     private TokenUtil tokenUtil;
 
@@ -164,8 +164,8 @@ public class ProjectMemberController {
             if(!authorityService.hasAuthority(teamId,projectId,username,"addMember"))
                 throw new IllegalAccessException();
 
-            Invitation invitation = invitationService.invitation(teamId,projectId,username,addMemberUsername,description);
-            invitationService.save(invitation);
+            Message message = messageService.message(teamId,projectId,username,addMemberUsername,description);
+            messageService.save(message);
 
             StateUtil.setSuccess(res);
         }catch (UnsupportedEncodingException e) {

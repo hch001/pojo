@@ -14,10 +14,14 @@ public class FileConfig implements Serializable {
     private String teamId;
     private String projectId;
 
-    private Integer maxSizePerFile;
+    private Double maxSizePerFile;
     private List<String> allowedTypes;
     @Inoperable
-    private Integer used;
+    private double used;
+
+    public FileConfig(){
+        this.used = 0;
+    }
 
     public String get_id() {
         return _id;
@@ -43,11 +47,11 @@ public class FileConfig implements Serializable {
         this.projectId = projectId;
     }
 
-    public Integer getMaxSizePerFile() {
+    public Double getMaxSizePerFile() {
         return maxSizePerFile;
     }
 
-    public void setMaxSizePerFile(Integer maxSizePerFile) {
+    public void setMaxSizePerFile(Double maxSizePerFile) {
         this.maxSizePerFile = maxSizePerFile;
     }
 
@@ -59,11 +63,11 @@ public class FileConfig implements Serializable {
         this.allowedTypes = allowedTypes;
     }
 
-    public Integer getUsed() {
+    public Double getUsed() {
         return used;
     }
 
-    public void setUsed(Integer used) {
+    public void setUsed(Double used) {
         this.used = used;
     }
 }

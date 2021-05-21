@@ -40,9 +40,9 @@ public class FileConfigServiceImpl implements FileConfigService {
         boolean res = file.mkdirs();
 
         FileConfig fileConfig = new FileConfig();
-        fileConfig.setUsed(0);
+        fileConfig.setUsed(0.0);
         fileConfig.setAllowedTypes(DEFAULT_ALLOWED_TYPES);
-        fileConfig.setMaxSizePerFile(DEFAULT_SIZE_PER_SIZE);
+        fileConfig.setMaxSizePerFile((double)DEFAULT_SIZE_PER_SIZE);
 
         fileConfigRepository.save(fileConfig);
         return res;
@@ -59,7 +59,7 @@ public class FileConfigServiceImpl implements FileConfigService {
     }
 
     @Override
-    public boolean hasEnoughSpace(String teamId, String projectId, int fileSize) {
+    public boolean hasEnoughSpace(String teamId, String projectId, double fileSize) {
         FileConfig fileConfig = fileConfigRepository.findByTeamIdAndProjectId(teamId,projectId);
         if(fileConfig==null)
             return false;
@@ -78,7 +78,7 @@ public class FileConfigServiceImpl implements FileConfigService {
     }
 
     @Override
-    public boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize){
+    public boolean setMaxSizePerFile(String teamId,String projectId,double newSize){
         return fileConfigRepository.setMaxSizePerFile(teamId,projectId,newSize);
     }
 
@@ -88,12 +88,12 @@ public class FileConfigServiceImpl implements FileConfigService {
     }
 
     @Override
-    public boolean setUsed(String teamId,String projectId,int newUsed){
+    public boolean setUsed(String teamId,String projectId,double newUsed){
         return fileConfigRepository.setUsed(teamId,projectId,newUsed);
     }
 
     @Override
-    public FileConfig fileConfig(String teamId, String projectId, int maxSizePerFile, List<String> allowedTypes) {
+    public FileConfig fileConfig(String teamId, String projectId, double maxSizePerFile, List<String> allowedTypes) {
         FileConfig fileConfig = new FileConfig();
 
         fileConfig.setTeamId(teamId);

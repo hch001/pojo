@@ -6,13 +6,13 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.io.Serializable;
 
 @Document(value = "Invitation")
-public class Invitation implements Serializable {
+public class Message implements Serializable {
     @MongoId
     private String _id;
     private String teamId;
     private String projectId;
-    private String inviter;
-    private String invitee;
+    private String from;
+    private String to;
     private String description;
 
 //    public static int TTL = 3*60*60*1000; // time-unit:mills
@@ -26,20 +26,20 @@ public class Invitation implements Serializable {
         this._id = _id;
     }
 
-    public String getInviter() {
-        return inviter;
+    public String getFrom() {
+        return from;
     }
 
-    public void setInviter(String inviter) {
-        this.inviter = inviter;
+    public void setFrom(String form) {
+        this.from = from;
     }
 
-    public String getInvitee() {
-        return invitee;
+    public String getTo() {
+        return to;
     }
 
-    public void setInvitee(String invitee) {
-        this.invitee = invitee;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getTeamId() {

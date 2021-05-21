@@ -34,7 +34,7 @@ public class ProjectController {
     @Resource
     private TaskService taskService;
     @Resource
-    private InvitationService invitationService;
+    private MessageService messageService;
     @Resource
     private TokenUtil tokenUtil;
 
@@ -112,7 +112,7 @@ public class ProjectController {
                 fileConfigService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 fileInfoService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 fileInfoService.deleteAllFiles(teamId,projectId);
-                invitationService.deleteAllByTeamIdAndProjectId(teamId,projectId);
+                messageService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 logService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 noticeService.deleteAllByTeamIdAndProjectId(teamId,projectId);
                 taskService.deleteAllByTeamIdAndProjectId(teamId,projectId);

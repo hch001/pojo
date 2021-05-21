@@ -49,6 +49,7 @@ public class ProjectFileConfigController {
             FileConfig fileConfig = fileConfigService.findByTeamIdAndProjectId(project.getTeamId(), projectId);
             res.put("allowedTypes",fileConfig.getAllowedTypes());
             res.put("maxSizePerFile",fileConfig.getMaxSizePerFile());
+
             StateUtil.setSuccess(res);
         } catch (UnsupportedEncodingException e) {
             StateUtil.setTokenError(res);

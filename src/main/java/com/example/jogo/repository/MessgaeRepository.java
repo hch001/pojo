@@ -1,18 +1,18 @@
 package com.example.jogo.repository;
 
-import com.example.jogo.Entity.Invitation;
+import com.example.jogo.Entity.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface InvitationRepository extends MongoRepository<Invitation,String> {
+public interface MessgaeRepository extends MongoRepository<Message,String> {
     Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
     Long deleteAllByTeamId(String teamId);
     Long deleteAllBy_id(String _id);
 //    Long deleteAllByInviter(String inviter);
 
-    List<Invitation> findAllByInvitee(String invitee);
-    List<Invitation> findAllByInviter(String inviter);
+    List<Message> findAllByFrom(String from);
+    List<Message> findAllByTo(String to);
 }

@@ -11,7 +11,7 @@ public interface FileConfigRepository extends MongoRepository<FileConfig,String>
     FileConfig findByTeamIdAndProjectId(String teamId,String projectId);
     Long deleteAllByTeamIdAndProjectId(String teamId, String projectId);
 
-    default boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize){
+    default boolean setMaxSizePerFile(String teamId,String projectId,Double newSize){
         FileConfig fileConfig = findByTeamIdAndProjectId(teamId,projectId);
         if(null==fileConfig)
             return false;
@@ -33,7 +33,7 @@ public interface FileConfigRepository extends MongoRepository<FileConfig,String>
         return true;
     }
 
-    default boolean setUsed(String teamId,String projectId,int newUsed){
+    default boolean setUsed(String teamId,String projectId,double newUsed){
         FileConfig fileConfig = findByTeamIdAndProjectId(teamId,projectId);
         if(null==fileConfig)
             return false;

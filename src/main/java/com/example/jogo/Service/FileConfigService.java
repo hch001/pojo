@@ -33,7 +33,7 @@ public interface FileConfigService {
      * @param fileSize
      * @return
      */
-    boolean hasEnoughSpace(String teamId,String projectId,int fileSize);
+    boolean hasEnoughSpace(String teamId,String projectId,double fileSize);
 
     /**
      * Get fileConfig of a team or project.
@@ -53,13 +53,13 @@ public interface FileConfigService {
      */
     boolean deleteAllByTeamIdAndProjectId(String teamId, String projectId);
 
-    boolean setMaxSizePerFile(String teamId,String projectId,Integer newSize);
+    boolean setMaxSizePerFile(String teamId,String projectId,double newSize);
 
     boolean setAllowedTypes(String teamId, String projectId, List<String> types);
 
-    boolean setUsed(String teamId,String projectId,int newUsed);
+    boolean setUsed(String teamId,String projectId,double newUsed);
 
-    FileConfig fileConfig(String teamId,String projectId,int maxSizePerFile,List<String> allowedTypes);
+    FileConfig fileConfig(String teamId,String projectId,double maxSizePerFile,List<String> allowedTypes);
 
     void save(FileConfig fileConfig);
 }

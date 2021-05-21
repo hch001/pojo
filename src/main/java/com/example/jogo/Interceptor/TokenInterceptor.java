@@ -2,9 +2,12 @@ package com.example.jogo.Interceptor;
 
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.jogo.Service.MemberService;
+import com.example.jogo.ServiceImpl.MemberServiceImpl;
 import com.example.jogo.Utils.TokenUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
@@ -21,6 +25,8 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Resource
     private TokenUtil tokenUtil;
     private static final Logger logger = LogManager.getLogger(TokenInterceptor.class);
+    @Resource(name="tokenRedisTemplate")
+    private RedisTemplate<String,String> tokenRedisTemplate;
 
     // controller之前
     @Override
@@ -33,12 +39,20 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         else {
             try{
-                if(tokenUtil.verify(token)){
+                String username = (String)tokenUtil.getDataFromPayLoad(token,"username");
+                String tokenInRedis = tokenRedisTemplate.opsForValue().get(MemberServiceImpl.PREFIX+username);
+//                System.out.println("username:"+username+",token:"+token+",tokenInRedis:"+tokenInRedis);
+                if(tokenInRedis.equals(token)){
+//                    System.out.println("equals");
                     return true;
                 }
+//                System.out.println("not equals");
+                response.setStatus(401);
             }
             catch (UnsupportedEncodingException | JWTVerificationException e){
                 logger.warn("token解析错误或者已经过期");
+                response.setStatus(401);
+            } catch (NullPointerException e){
                 response.setStatus(401);
             }
             finally {

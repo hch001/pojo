@@ -62,6 +62,18 @@ public class ProjectFileController {
             String teamId = projectService.findByProjectId(projectId).getTeamId();
             FileConfig fileConfig = fileConfigService.findByTeamIdAndProjectId(teamId,projectId);
 
+            if(!fileConfigService.hasEnoughSpace(teamId,projectId,size)){
+                res.put("code","403");
+                res.put("msg","存储空间不足");
+                return res;
+            }
+
+            if(fileConfig.getMaxSizePerFile()<size){
+                res.put("code","403");
+                res.put("msg","文件过大");
+                return res;
+            }
+
             boolean match = false;
             for(String t:fileConfig.getAllowedTypes()){
                 if(fileName.endsWith(t)){
@@ -83,8 +95,10 @@ public class ProjectFileController {
                 res.put("msg","文件已经存在");
                 return res;
             }
+
             fileInfoService.storeFile(teamId,projectId,httpServletRequest);
             fileInfoService.save(fileInfoService.fileInfo(teamId,projectId,fileName,username,size,0));
+            fileConfigService.setUsed(teamId,projectId,fileConfig.getUsed()+size);
 
             logService.save(logService.log(teamId,projectId,username,"上传了文件<"+fileName+">"));
             StateUtil.setSuccess(res);
