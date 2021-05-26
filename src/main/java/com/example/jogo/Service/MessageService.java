@@ -10,8 +10,8 @@ public interface MessageService {
     boolean deleteBy_id(String _id);
 
     List<Message> findAllByFrom(String from);
-    List<Message> findAllByTo(String to);
-
+    List<Message> findAllByToAndStateEquals(String to,String state);
+    Message findById(String id);
     void save(Message message);
     Message message(String teamId, String projectId, String from, String to, String description);
 }

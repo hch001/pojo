@@ -39,6 +39,8 @@ public class Authority implements Serializable {
                 return notNullAndTrue(getUpload());
             case ("download"):
                 return notNullAndTrue(getDownload());
+            case ("removeFile"):
+                return notNullAndTrue(getRemoveFile());
             case ("addMember"):
                 return notNullAndTrue(getAddMember());
             case ("removeMember"):

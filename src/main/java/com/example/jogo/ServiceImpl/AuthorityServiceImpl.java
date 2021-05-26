@@ -114,19 +114,7 @@ public class AuthorityServiceImpl implements AuthorityService {
         if(authority==null)
             return false;
 
-        authority.setUpload(false);
-        authority.setDownload(false);
-        authority.setRemoveFile(false);
-
-        authority.setAddMember(false);
-        authority.setRemoveMember(false);
-
-        authority.setModifyProjectInfo(false);
-        authority.setModifyTeamInfo(false);
-        authority.setModifyTask(false);
-        authority.setModifyNotice(false);
-
-        authority.setAssess(false);
+        setFalse(authority);
 
         replace(authority);
 
@@ -141,6 +129,12 @@ public class AuthorityServiceImpl implements AuthorityService {
         authority.setProjectId(projectId);
         authority.setUsername(username);
 
+        setFalse(authority);
+
+        return authority;
+    }
+
+    private void setFalse(Authority authority) {
         authority.setUpload(false);
         authority.setDownload(false);
         authority.setRemoveFile(false);
@@ -154,8 +148,6 @@ public class AuthorityServiceImpl implements AuthorityService {
         authority.setModifyNotice(false);
 
         authority.setAssess(false);
-
-        return authority;
     }
 
 

@@ -183,4 +183,37 @@ public class ProjectFileController {
         }
         return res;
     }
+
+    @RequestMapping(value = "/remove",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> removeFile(HttpServletRequest request,@RequestBody Map<String,String> params){
+        Map<String,Object> res = new HashMap<>();
+        try{
+            String username = (String)tokenUtil.getDataFromPayLoad(request.getHeader("token"),"username");
+            String projectId = params.get("projectId");
+            Project project = projectService.findByProjectId(projectId);
+            String teamId = project.getTeamId();
+
+//            System.out.println(authorityService.hasAuthority(teamId, projectId, username, "removeFile"));
+
+            if(!authorityService.hasAuthority(teamId, projectId, username, "removeFile"))
+                throw new IllegalAccessException();
+
+            String fileName = params.get("fileName");
+            FileInfo fileInfo = fileInfoService.findByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+
+            fileInfoService.deleteAFile(fileInfo);
+            fileInfoService.deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
+            logService.save(logService.log(teamId,projectId,username,"撤回了文件<"+fileName+">"));
+
+            StateUtil.setSuccess(res);
+        } catch (UnsupportedEncodingException e){
+            StateUtil.setTokenError(res);
+        } catch (IllegalAccessException e){
+            StateUtil.setAuthorityError(res);
+        } catch (NullPointerException e) {
+            StateUtil.setNullObjectError(res);
+        }
+        return res;
+    }
 }

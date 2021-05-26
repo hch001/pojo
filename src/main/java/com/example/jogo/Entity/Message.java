@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 
-@Document(value = "Invitation")
+@Document(value = "Message")
 public class Message implements Serializable {
     @MongoId
     private String _id;
@@ -14,6 +14,7 @@ public class Message implements Serializable {
     private String from;
     private String to;
     private String description;
+    private Boolean state; // waiting accepted refused
 
 //    public static int TTL = 3*60*60*1000; // time-unit:mills
     public static int MAX_LENGTH = 30; // max length of description
@@ -64,5 +65,13 @@ public class Message implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getState() {
+        return state;
+    }
+
+    public void setState(Boolean state) {
+        this.state = state;
     }
 }

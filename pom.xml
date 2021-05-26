@@ -11,6 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>jogo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>jogo</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -30,7 +31,19 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
+<!--                <exclusion> &lt;!&ndash; 内部tomcat &ndash;&gt;-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--                </exclusion>-->
             </exclusions>
+        </dependency>
+
+        <dependency> <!-- 外部的tomcat -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <!--打包的时候可以不用包进去，别的设施会提供。事实上该依赖理论上可以参与编译，测试，运行等周期。
+                相当于compile，但是打包阶段做了exclude操作-->
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

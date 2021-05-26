@@ -7,12 +7,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MessgaeRepository extends MongoRepository<Message,String> {
+public interface MessageRepository extends MongoRepository<Message,String> {
     Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
     Long deleteAllByTeamId(String teamId);
     Long deleteAllBy_id(String _id);
 //    Long deleteAllByInviter(String inviter);
 
     List<Message> findAllByFrom(String from);
-    List<Message> findAllByTo(String to);
+    List<Message> findAllByToAndStateEquals(String to,String state);
+    Message findBy_id(String _id);
 }
