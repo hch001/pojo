@@ -21,6 +21,7 @@ public class Task implements Serializable {
     private List<String> members;
     private Date deadline;
     private String description;
+    private String state; // 待完成、逾期、已完成
 
     public String get_id() {
         return _id;
@@ -84,5 +85,13 @@ public class Task implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

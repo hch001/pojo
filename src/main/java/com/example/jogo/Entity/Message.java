@@ -1,5 +1,6 @@
 package com.example.jogo.Entity;
 
+import com.example.jogo.Utils.IDUtil;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -14,10 +15,14 @@ public class Message implements Serializable {
     private String from;
     private String to;
     private String description;
-    private Boolean state; // waiting accepted refused
+    private String state; // waiting accepted refused
 
 //    public static int TTL = 3*60*60*1000; // time-unit:mills
     public static int MAX_LENGTH = 30; // max length of description
+
+    public Message(){
+        this._id = IDUtil.generateID();
+    }
 
     public String get_id() {
         return _id;
@@ -31,7 +36,7 @@ public class Message implements Serializable {
         return from;
     }
 
-    public void setFrom(String form) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
@@ -67,11 +72,11 @@ public class Message implements Serializable {
         this.description = description;
     }
 
-    public Boolean getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Boolean state) {
+    public void setState(String state) {
         this.state = state;
     }
 }
