@@ -201,10 +201,11 @@ public class ProjectFileController {
 
             String fileName = params.get("fileName");
             FileInfo fileInfo = fileInfoService.findByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
-
+            FileConfig fileConfig = fileConfigService.findByTeamIdAndProjectId(teamId,projectId);
             fileInfoService.deleteAFile(fileInfo);
             fileInfoService.deleteByTeamIdAndProjectIdAndFileName(teamId,projectId,fileName);
             logService.save(logService.log(teamId,projectId,username,"撤回了文件<"+fileName+">"));
+            fileConfigService.setUsed(teamId,projectId,fileConfig.getUsed()-fileInfo.getSize());
 
             StateUtil.setSuccess(res);
         } catch (UnsupportedEncodingException e){

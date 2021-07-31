@@ -4,6 +4,7 @@ import com.example.jogo.Entity.Task;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -12,4 +13,6 @@ public interface TaskRepository extends MongoRepository<Task,String> {
     Task findBy_id(String _id);
     Long deleteAllByTeamIdAndProjectId(String teamId,String projectId);
     Long deleteBy_id(String _id);
+    List<Task> findByTeamIdAndProjectIdAndState(String teamId,String projectId,String state);
+    List<Task> findAllByDeadlineBeforeAndStateEquals(Date date,String state);
 }

@@ -13,5 +13,6 @@ public interface TaskService {
     boolean deleteBy_id(String _id);
     void save(Task task);
 
-    Task task(String teamId, String projectId, String taskName, List<String> members, Date deadline,String description);
+    Task task(String teamId, String projectId, String taskName, List<String> members, Date deadline,String description,String state);
+    List<Task> findByTeamIdAndProjectIdAndState(String teamId,String projectId,String state);
 }

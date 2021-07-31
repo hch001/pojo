@@ -180,12 +180,6 @@ public class ProjectMemberController {
         return res;
     }
 
-//    private void hidePassword(List<Member> members){
-//        members.forEach((member)->{
-//            member.setPassword(null);
-//        });
-//    }
-
     private boolean isChanged(Object o1,Object o2){
         return o1==null||!o1.equals(o2);
     }

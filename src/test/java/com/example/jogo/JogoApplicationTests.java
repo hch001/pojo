@@ -1,11 +1,10 @@
 package com.example.jogo;
 
 
-import com.example.jogo.Entity.Authority;
-import com.example.jogo.Entity.FileConfig;
-import com.example.jogo.Entity.Member;
-import com.example.jogo.Entity.Project;
+import com.example.jogo.Entity.*;
 import com.example.jogo.Service.*;
+import com.example.jogo.Utils.EmailUtil;
+import com.example.jogo.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,9 +13,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.text.ParseException;
 
 @SpringBootTest
 class JogoApplicationTests {
@@ -39,15 +36,12 @@ class JogoApplicationTests {
     private AuthorityService authorityService;
     @Resource
     private FileConfigService fileConfigService;
-//    @Autowired
-//    private JavaMailSender mailSender;
+    @Resource
+    private MessageService messageService;
+    @Resource
+    private EmailUtil emailUtil;
     @Test
-    void t() {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("13959582448@163.com");
-//        message.setSubject("外面小程序项目组");
-//        message.setTo("huangchenhan123@163.com");
-//        message.setText("任务<小程序界面的开发>即将于 2021-05-21 截止");
-//        mailSender.send(message);
+    void t() throws ParseException {
+//        emailUtil.sendEmail("13959582448@163.com","111","222");
     }
 }

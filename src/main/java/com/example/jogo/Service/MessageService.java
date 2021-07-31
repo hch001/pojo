@@ -14,4 +14,6 @@ public interface MessageService {
     Message findById(String id);
     void save(Message message);
     Message message(String teamId, String projectId, String from, String to, String description);
+    boolean setAccepted(String messageId);
+    boolean setRefused(String messageId);
 }

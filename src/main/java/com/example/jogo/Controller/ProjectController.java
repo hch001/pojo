@@ -185,6 +185,12 @@ public class ProjectController {
         return res;
     }
 
+//    @RequestMapping(value = "/create",method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String,Object> createProject(HttpServletRequest request,@RequestBody Map<String,String> params){
+//
+//    }
+
 
     private boolean isChanged(Object o1,Object o2){
         return o1==null||!o1.equals(o2);

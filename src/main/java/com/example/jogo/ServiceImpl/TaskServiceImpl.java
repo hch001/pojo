@@ -54,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task task(String teamId, String projectId, String taskName, List<String> members, Date deadline, String description) {
+    public Task task(String teamId, String projectId, String taskName, List<String> members, Date deadline, String description,String state) {
         Task task = new Task();
 
         task.setTeamId(teamId);
@@ -63,7 +63,13 @@ public class TaskServiceImpl implements TaskService {
         task.setMembers(members);
         task.setDeadline(deadline);
         task.setDescription(description);
+        task.setState(state);
 
         return task;
+    }
+
+    @Override
+    public List<Task> findByTeamIdAndProjectIdAndState(String teamId, String projectId, String state) {
+        return taskRepository.findByTeamIdAndProjectIdAndState(teamId,projectId,state);
     }
 }
